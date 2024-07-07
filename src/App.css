@@ -1,0 +1,27 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  text-align: center; /* Center content horizontally */
+}
+
+.logo {
+  height: 6em;
+  will-change: filter;
+  transition: filter 300ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #61b3fbaa);
+}
+
+.progress-container {
+  margin-top: 10em; /* Add space from the top */
+  text-align: center;
+}

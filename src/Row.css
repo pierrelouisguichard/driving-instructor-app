@@ -1,0 +1,46 @@
+.row-container {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  margin-bottom: 1em; /* Margin bottom for spacing */
+}
+
+.variable {
+  flex: 1; /* Take up remaining space */
+  text-align: left;
+}
+
+.progress-bar {
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  gap: 1em; /* Gap between progress stages */
+  margin-top: 1em; /* Margin top for spacing */
+}
+
+.progress-stage {
+  display: inline-block; /* Ensure elements are inline and respect width */
+  padding: 0.5em 0.5em; /* Padding around each progress stage */
+  min-width: 150px; /* Minimum width for each button */
+  text-align: center; /* Center align text within button */
+  border: 2px solid #ccc; /* Border style */
+  border-radius: 5px; /* Border radius for rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    transform 0.3s; /* Transition effect for smoother changes */
+  white-space: nowrap;
+}
+
+.progress-stage.completed {
+  background-color: #537f55; /* Background color when stage is completed */
+  border-color: #537f55; /* Border color when stage is completed */
+  color: white; /* Text color when stage is completed */
+}
+
+.progress-stage.current {
+  background-color: #43bb47; /* Background color for current stage */
+  border-color: #43bb47; /* Border color for current stage */
+  transform: scale(1.1); /* Scale effect for current stage */
+  z-index: 1; /* Ensure current stage is on top */
+}
