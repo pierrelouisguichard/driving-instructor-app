@@ -2,9 +2,17 @@ const Pupil = require("../models/pupilModel");
 const mongoose = require("mongoose");
 
 const getAllPupils = async (req, res) => {
-  const pupils = await Pupil.find({}).sort({ createdAt: -1 });
+  try {
+    const pupils = await Pupil.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(pupils);
+    // Set caching headers to disable caching (for development)
+    res.setHeader("Cache-Control", "no-store");
+
+    res.status(200).json(pupils);
+  } catch (error) {
+    console.error("Errorr fetching pupils:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 const getPupil = async (req, res) => {

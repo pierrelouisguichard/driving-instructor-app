@@ -25,22 +25,19 @@
   border: 2px solid #ccc; /* Border style */
   border-radius: 5px; /* Border radius for rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
-  transition:
-    background-color 0.3s,
-    border-color 0.3s,
-    transform 0.3s; /* Transition effect for smoother changes */
+  transition: background-color 0.3s, border-color 0.3s, transform 0.3s; /* Transition effect for smoother changes */
   white-space: nowrap;
 }
 
 .progress-stage.completed {
-  background-color: #537f55; /* Background color when stage is completed */
-  border-color: #537f55; /* Border color when stage is completed */
+  background-color: #2d4483; /* Background color when stage is completed */
+  border-color: #2d4483; /* Border color when stage is completed */
   color: white; /* Text color when stage is completed */
 }
 
 .progress-stage.current {
-  background-color: #43bb47; /* Background color for current stage */
-  border-color: #43bb47; /* Border color for current stage */
+  background-color: #1e2f5d; /* Background color for current stage */
+  border-color: #1e2f5d; /* Border color for current stage */
   transform: scale(1.1); /* Scale effect for current stage */
   z-index: 1; /* Ensure current stage is on top */
 }
