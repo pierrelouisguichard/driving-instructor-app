@@ -1,5 +1,6 @@
 import { Key, useEffect, useState } from "react";
 import PupilDetails from "../components/pupilDetails";
+import AddPupil from "../components/addPupil";
 import "./Pupil.css";
 
 // Define the interface for a pupil
@@ -46,6 +47,7 @@ function Pupil() {
             </div>
           ))}
       </div>
+      <AddPupil />
     </div>
   );
 }

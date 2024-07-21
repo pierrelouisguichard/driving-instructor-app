@@ -6,7 +6,7 @@ const pupilRoutes = require("./routes/pupils");
 const cors = require("cors");
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
@@ -29,10 +29,6 @@ mongoose
     console.log(e);
   });
 
-app.listen(process.env.PORT, () => {
-  console.log("listening on port " + process.env.PORT);
-});
-
 app.listen(port, () => {
-  console.log(`Backend server is running on http://localhost:${port}`);
+  console.log("listening on port " + process.env.PORT);
 });
