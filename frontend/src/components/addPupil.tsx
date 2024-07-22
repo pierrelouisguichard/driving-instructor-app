@@ -1,13 +1,17 @@
 import { useState } from "react";
+import "./addPupil.css";
 
-function addPupil() {
+interface AddPupilProps {
+  onAddPupil: () => void; // Callback function to be called after adding a pupil
+}
+
+function AddPupil({ onAddPupil }: AddPupilProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    console.log("button pressed");
     e.preventDefault();
 
     const pupil = { firstName, lastName, eMail };
@@ -19,17 +23,17 @@ function addPupil() {
         "Content-Type": "application/json",
       },
     });
-    const json = await response.json();
 
     if (!response.ok) {
+      const json = await response.json();
       setError(json.error);
-    }
-    if (response.ok) {
+    } else {
       setFirstName("");
       setLastName("");
       setEMail("");
-      //   setError(null);
-      console.log("new pupil add", json);
+      setError("");
+      console.log("New pupil added");
+      onAddPupil(); // Notify the parent component to refresh the list
     }
   };
 
@@ -43,22 +47,22 @@ function addPupil() {
           type="text"
           onChange={(e) => setFirstName(e.target.value)}
           value={firstName}
-        ></input>
+        />
 
         <label>Last Name:</label>
         <input
           type="text"
           onChange={(e) => setLastName(e.target.value)}
           value={lastName}
-        ></input>
+        />
 
-        <label>EMail:</label>
+        <label>Email:</label>
         <input
           type="text"
           onChange={(e) => setEMail(e.target.value)}
           value={eMail}
-        ></input>
-        <button>Add Pupil</button>
+        />
+        <button type="submit">Add Pupil</button>
       </form>
 
       {error && <div className="error">{error}</div>}
@@ -66,4 +70,4 @@ function addPupil() {
   );
 }
 
-export default addPupil;
+export default AddPupil;

@@ -1,4 +1,5 @@
 import React from "react";
+import "./pupilDetails.css";
 
 interface Pupil {
   firstName: string;
@@ -9,15 +10,20 @@ interface Pupil {
 
 interface Props {
   pupil: Pupil;
+  onDelete: (id: string) => void;
+  pupilKey: string; // Function to handle delete action
 }
 
-const PupilDetails: React.FC<Props> = ({ pupil }) => {
+const PupilDetails: React.FC<Props> = ({ pupil, pupilKey, onDelete }) => {
   return (
     <div className="pupil-details">
       <h4>{pupil.firstName}</h4>
       <h5>{pupil.lastName}</h5>
       <p>{pupil.eMail}</p>
       <p>{pupil.createdAt}</p>
+      <button className="delete-button" onClick={() => onDelete(pupilKey)}>
+        Delete Pupil
+      </button>
     </div>
   );
 };
