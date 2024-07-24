@@ -32,22 +32,14 @@ function Pupil() {
     fetchPupils();
   }, []);
 
-  const handleDelete = async (key: string) => {
-    const response = await fetch("http://localhost:4000/api/pupils/" + key, {
-      method: "DELETE",
-    });
-
-    if (response.ok) {
-      fetchPupils(); // Re-fetch pupils list
-      console.log("Successfully deleted Pupil");
-    } else {
-      console.error("Failed to delete Pupil");
-    }
+  const handleNew = () => {
+    navigate("/card");
   };
 
   return (
     <div>
       <h2>Pupil List</h2>
+      <button onClick={handleNew}>New</button>
       <div className="pupils">
         {pupils &&
           pupils.map((pupil) => (
@@ -62,11 +54,7 @@ function Pupil() {
                   width: "100%",
                 }}
               >
-                <PupilDetails
-                  pupil={pupil}
-                  onDelete={handleDelete}
-                  pupilKey={pupil._id.toString()}
-                />
+                <PupilDetails pupil={pupil} />
               </button>
             </div>
           ))}

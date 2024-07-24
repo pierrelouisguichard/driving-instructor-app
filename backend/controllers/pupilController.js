@@ -1,5 +1,10 @@
+require("dotenv").config();
+
 const Pupil = require("../models/pupilModel");
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
+const express = require("express");
+const router = express.Router();
 
 const getAllPupils = async (req, res) => {
   try {
@@ -32,11 +37,11 @@ const getPupil = async (req, res) => {
 };
 
 const createPupil = async (req, res) => {
-  const { firstName, lastName, eMail } = req.body;
-
   try {
-    const pupil = await Pupil.create({ firstName, lastName, eMail });
-    res.status(200).json(pupil);
+    const { firstName, lastName, eMail, progressRecords } = req.body;
+    const pupil = new Pupil({ firstName, lastName, eMail, progressRecords });
+    await pupil.save();
+    res.status(201).json(pupil);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -61,22 +66,62 @@ const deletePupil = async (req, res) => {
 const updatePupil = async (req, res) => {
   const { id } = req.params;
 
+  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "Invalid Pupil ID" });
+    return res.status(400).json({ error: "Invalid Pupil ID" }); // Use 400 for bad request
   }
 
-  const pupil = await Pupil.findOneAndUpdate(
-    { _id: id },
-    {
-      ...req.body,
+  try {
+    // Update pupil document
+    const pupil = await Pupil.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }, // Use spread to update fields
+      { new: true, runValidators: true } // Return updated document and run validators
+    );
+
+    // Check if pupil was found
+    if (!pupil) {
+      return res.status(404).json({ error: "Pupil Not Found" });
     }
-  );
 
-  if (!pupil) {
-    return res.status(404).json({ error: "Pupil Not Found." });
+    // Return the updated pupil
+    res.status(200).json(pupil);
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the pupil" });
+  }
+};
+
+const transporter = nodemailer.createTransport({
+  service: "hotmail", // Use your email service
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  },
+});
+
+const sendReport = async (req, res) => {
+  const { to, subject, html } = req.body;
+
+  if (!to || !subject || !html) {
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
-  res.status(200).json(pupil);
+  try {
+    await transporter.sendMail({
+      from: "pierrelguichard@hotmail.com",
+      to,
+      subject,
+      html,
+    });
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
 };
 
 module.exports = {
@@ -85,4 +130,5 @@ module.exports = {
   createPupil,
   deletePupil,
   updatePupil,
+  sendReport,
 };

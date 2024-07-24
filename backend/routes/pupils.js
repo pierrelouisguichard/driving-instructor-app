@@ -6,6 +6,7 @@ const {
   createPupil,
   deletePupil,
   updatePupil,
+  sendReport,
 } = require("../controllers/pupilController");
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.post("/", createPupil);
 router.delete("/:id", deletePupil);
 
 router.patch("/:id", updatePupil);
+
+router.post("/send-report", sendReport);
 
 module.exports = router;

@@ -1,9 +1,12 @@
-import { useState } from "react";
 import "./Row.css";
 
-function Row(props: { variable: any }) {
-  const [progress, setProgress] = useState(0);
+interface RowProps {
+  variable: string;
+  stage: string;
+  onStageChange: (stage: string) => void;
+}
 
+function Row(props: RowProps) {
   const stages = [
     "Introduced",
     "Talk Through",
@@ -12,10 +15,10 @@ function Row(props: { variable: any }) {
     "Independent",
   ];
 
-  const { variable } = props;
+  const { variable, stage, onStageChange } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setProgress(parseInt(event.target.value));
+    onStageChange(event.target.value);
   };
 
   return (
@@ -24,10 +27,10 @@ function Row(props: { variable: any }) {
         <p>{variable}</p>
       </div>
       <div className="progress-dropdown">
-        <select value={progress} onChange={handleChange}>
-          {stages.map((stage, index) => (
-            <option key={index} value={index}>
-              {stage}
+        <select value={stage} onChange={handleChange}>
+          {stages.map((stageOption, index) => (
+            <option key={index} value={stageOption}>
+              {stageOption}
             </option>
           ))}
         </select>
