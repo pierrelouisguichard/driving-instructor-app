@@ -14,21 +14,23 @@ function Row(props: { variable: any }) {
 
   const { variable } = props;
 
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setProgress(parseInt(event.target.value));
+  };
+
   return (
     <div className="row-container">
       <div className="variable">
         <p>{variable}</p>
       </div>
-      <div className="progress-bar">
-        {stages.map((stage, index) => (
-          <div
-            key={index}
-            className={`progress-stage ${progress >= index ? "completed" : ""} ${progress === index ? "current" : ""}`}
-            onClick={() => setProgress(index)}
-          >
-            {stage}
-          </div>
-        ))}
+      <div className="progress-dropdown">
+        <select value={progress} onChange={handleChange}>
+          {stages.map((stage, index) => (
+            <option key={index} value={index}>
+              {stage}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

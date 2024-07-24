@@ -1,19 +1,16 @@
 import { Key, useEffect, useState } from "react";
 import PupilDetails from "../components/pupilDetails";
-import AddPupil from "../components/addPupil";
 import "./Pupil.css";
-
-// Define the interface for a pupil
-interface Pupil {
-  _id: Key; // Assuming Key is imported and represents the type of _id
-  firstName: string;
-  lastName: string;
-  eMail: string;
-  createdAt: string; // Assuming createdAt is a string; adjust type if needed
-}
+import PupilInterface from "../interface/pupilInterface";
+import { useNavigate } from "react-router-dom";
 
 function Pupil() {
-  const [pupils, setPupils] = useState<Pupil[] | null>(null);
+  const [pupils, setPupils] = useState<PupilInterface[] | null>(null);
+  const navigate = useNavigate();
+
+  const handleNavigate = (pupilId: string) => {
+    navigate(`/card/${pupilId}`);
+  };
 
   const fetchPupils = async () => {
     try {
@@ -48,26 +45,32 @@ function Pupil() {
     }
   };
 
-  const onAddPupil = () => {
-    fetchPupils();
-  };
-
   return (
     <div>
       <h2>Pupil List</h2>
       <div className="pupils">
         {pupils &&
           pupils.map((pupil) => (
-            <div key={pupil._id} className="pupil-card">
-              <PupilDetails
-                pupil={pupil}
-                onDelete={handleDelete}
-                pupilKey={pupil._id.toString()}
-              />
+            <div key={pupil._id}>
+              <button
+                onClick={() => handleNavigate(pupil._id)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  textAlign: "left",
+                  width: "100%",
+                }}
+              >
+                <PupilDetails
+                  pupil={pupil}
+                  onDelete={handleDelete}
+                  pupilKey={pupil._id.toString()}
+                />
+              </button>
             </div>
           ))}
       </div>
-      <AddPupil onAddPupil={onAddPupil} />
     </div>
   );
 }

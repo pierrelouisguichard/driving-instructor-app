@@ -1,15 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./addPupil.css";
+import Row from "../components/Row";
 
-interface AddPupilProps {
-  onAddPupil: () => void; // Callback function to be called after adding a pupil
-}
-
-function AddPupil({ onAddPupil }: AddPupilProps) {
+function AddPupil() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); //
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -32,8 +31,7 @@ function AddPupil({ onAddPupil }: AddPupilProps) {
       setLastName("");
       setEMail("");
       setError("");
-      console.log("New pupil added");
-      onAddPupil(); // Notify the parent component to refresh the list
+      navigate("/");
     }
   };
 
@@ -62,10 +60,26 @@ function AddPupil({ onAddPupil }: AddPupilProps) {
           onChange={(e) => setEMail(e.target.value)}
           value={eMail}
         />
+        <h2>Progress Record</h2>
+        <Row variable={"Cockpit Drill & Controls"} />
+        <Row variable={"Moving Off Safely"} />
+        <Row variable={"Steer Accurate Course"} />
+        <Row variable={"Stop Normally"} />
+        <Row variable={"Gear Changing"} />
+        <Row variable={"Clutch Control (level & uphill)"} />
+        <Row variable={"Approaching & Turning Left"} />
+        <Row variable={"Approaching & Emerging Left"} />
+        <Row variable={"Approaching & Turning Right"} />
+        <Row variable={"Approaching & Emerging Left"} />
+        <Row variable={"Crossing Path"} />
+        <Row variable={"Moving off at an angle"} />
+        <Row variable={"Hill Starts (up & down)"} />
+        <Row variable={"Controlled Stop"} />
+        <Row variable={"Cross Roads"} />
+        <Row variable={"Ancillary Controls"} />
         <button type="submit">Add Pupil</button>
+        {error && <div className="error">{error}</div>}
       </form>
-
-      {error && <div className="error">{error}</div>}
     </>
   );
 }

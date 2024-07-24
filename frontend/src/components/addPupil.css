@@ -49,10 +49,11 @@
 }
 
 .error {
-  margin-top: 20px;
+  margin: 20px auto;
   padding: 10px;
   color: white;
   background-color: #e74c3c;
   border-radius: 4px;
   text-align: center;
+  max-width: 400px;
 }
