@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./Card.css";
 import Logo from "../assets/Driving_School.png";
 import Row from "../components/Row";
+import formatProgressReport from "../components/formatProgressReport";
 
 const Card: React.FC = () => {
-  const { id } = useParams<{ id?: string }>(); // `id` might be undefined
+  const { id } = useParams<{ id?: string }>();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
@@ -56,77 +57,12 @@ const Card: React.FC = () => {
     }
   }, [id]);
 
-  const formatProgressReport = () => {
-    return `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-              margin: 0;
-              padding: 0;
-              background-color: #f4f4f4;
-            }
-            .container {
-              max-width: 600px;
-              margin: 20px auto;
-              padding: 20px;
-              background: #fff;
-              border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            h1 {
-              color: #4CAF50;
-              margin-bottom: 10px;
-            }
-            h2 {
-              color: #333;
-              margin-bottom: 20px;
-              border-bottom: 2px solid #4CAF50;
-              padding-bottom: 10px;
-            }
-            ul {
-              list-style: none;
-              padding: 0;
-            }
-            li {
-              margin-bottom: 10px;
-              padding: 10px;
-              border-bottom: 1px solid #ddd;
-            }
-            .variable {
-              font-weight: bold;
-              color: #555;
-            }
-            .stage {
-              color: #777;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>${firstName} ${lastName}'s Progress Report</h1>
-            <h2>Progress Record</h2>
-            <ul>
-              ${progressRecords
-                .map(
-                  (record) => `
-                <li>
-                  <span class="variable">${record.variable}</span>: <span class="stage">${record.stage}</span>
-                </li>
-              `
-                )
-                .join("")}
-            </ul>
-          </div>
-        </body>
-      </html>
-    `;
-  };
-
   const handleSendReport = async () => {
-    const reportHtml = formatProgressReport();
+    const reportHtml = formatProgressReport({
+      firstName,
+      lastName,
+      progressRecords,
+    });
 
     try {
       const response = await fetch(

@@ -1,8 +1,8 @@
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PupilDetails from "../components/pupilDetails";
-import "./Pupil.css";
 import PupilInterface from "../interface/pupilInterface";
 import { useNavigate } from "react-router-dom";
+import "./Pupil.css";
 
 function Pupil() {
   const [pupils, setPupils] = useState<PupilInterface[] | null>(null);
@@ -39,7 +39,9 @@ function Pupil() {
   return (
     <div>
       <h2>Pupil List</h2>
-      <button onClick={handleNew}>New</button>
+      <button onClick={handleNew} className="button-new">
+        New
+      </button>
       <div className="pupils">
         {pupils &&
           pupils.map((pupil) => (
