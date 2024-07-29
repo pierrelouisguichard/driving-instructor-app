@@ -1,20 +1,9 @@
-import "./formatProgressReport.css";
+import PupilInterface from "../interface/PupilInterface";
 
-interface ProgressRecord {
-  variable: string;
-  stage: string;
-}
-
-interface Props {
-  firstName: string;
-  lastName: string;
-  progressRecords: ProgressRecord[];
-}
-
-const formatProgressReport: React.FC<Props> = ({
+const formatProgressReport: React.FC<PupilInterface> = ({
   firstName,
   lastName,
-  progressRecords,
+  drivingSkillsList,
 }) => {
   return (
     <html>
@@ -32,7 +21,7 @@ const formatProgressReport: React.FC<Props> = ({
           </h1>
           <h2>Progress Record</h2>
           <ul>
-            {progressRecords.map((record, index) => (
+            {drivingSkillsList.map((record, index) => (
               <li key={index}>
                 <span className="variable">{record.variable}</span>:{" "}
                 <span className="stage">{record.stage}</span>

@@ -1,33 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./Card.css";
-import Logo from "../assets/Driving_School.png";
-import Row from "../components/Row";
+import DrivingSkill from "../components/DrivingSkill";
 import formatProgressReport from "../components/formatProgressReport";
+import { drivingSkillsList } from "../drivingSkillsList";
 
 const Card: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
-  const [progressRecords, setProgressRecords] = useState([
-    { variable: "Cockpit Drill & Controls", stage: "Introduced" },
-    { variable: "Moving Off Safely", stage: "Introduced" },
-    { variable: "Steer Accurate Course", stage: "Introduced" },
-    { variable: "Stop Normally", stage: "Introduced" },
-    { variable: "Gear Changing", stage: "Introduced" },
-    { variable: "Clutch Control (level & uphill)", stage: "Introduced" },
-    { variable: "Approaching & Turning Left", stage: "Introduced" },
-    { variable: "Approaching & Emerging Left", stage: "Introduced" },
-    { variable: "Approaching & Turning Right", stage: "Introduced" },
-    { variable: "Approaching & Emerging Left", stage: "Introduced" },
-    { variable: "Crossing Path", stage: "Introduced" },
-    { variable: "Moving off at an angle", stage: "Introduced" },
-    { variable: "Hill Starts (up & down)", stage: "Introduced" },
-    { variable: "Controlled Stop", stage: "Introduced" },
-    { variable: "Cross Roads", stage: "Introduced" },
-    { variable: "Ancillary Controls", stage: "Introduced" },
-  ]);
+  const [progressRecords, setProgressRecords] = useState(drivingSkillsList);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -61,7 +43,10 @@ const Card: React.FC = () => {
     const reportHtml = formatProgressReport({
       firstName,
       lastName,
-      progressRecords,
+      drivingSkillsList,
+      _id: "",
+      eMail: "",
+      createdAt: "",
     });
 
     try {
@@ -139,7 +124,7 @@ const Card: React.FC = () => {
 
   return (
     <div id="root">
-      <img src={Logo} className="logo" alt="Driving School Logo" />
+      {/* <img src={Logo} className="logo" alt="Driving School Logo" /> */}
       <div className="progress-container">
         <form className="create" onSubmit={handleSubmit}>
           {id && (
@@ -175,7 +160,7 @@ const Card: React.FC = () => {
 
           <h2>Progress Record</h2>
           {progressRecords.map((record, index) => (
-            <Row
+            <DrivingSkill
               key={index}
               variable={record.variable}
               stage={record.stage}

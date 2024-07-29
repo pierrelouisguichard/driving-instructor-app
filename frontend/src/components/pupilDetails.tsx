@@ -1,15 +1,10 @@
 import React from "react";
-import "./pupilDetails.css";
-import PupilInterface from "../interface/pupilInterface";
+import PupilInterface from "../interface/PupilInterface";
 
-interface Props {
-  pupil: PupilInterface;
-}
-
-const PupilDetails: React.FC<Props> = ({ pupil }) => {
+const PupilDetails: React.FC<PupilInterface> = ({ firstName, lastName }) => {
   return (
     <div className="pupil-card">
-      <h4>{pupil.firstName + " " + pupil.lastName}</h4>
+      <h4>{firstName + " " + lastName}</h4>
     </div>
   );
 };

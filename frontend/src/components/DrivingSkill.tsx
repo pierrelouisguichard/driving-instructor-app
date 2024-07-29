@@ -1,12 +1,10 @@
-import "./Row.css";
+import { DrivingSkillInterface } from "../interface/DrivingSkillInterface";
 
-interface RowProps {
-  variable: string;
-  stage: string;
-  onStageChange: (stage: string) => void;
+interface DrivingSkillDropDown extends DrivingSkillInterface {
+  onStageChange: (stage: string) => void; // Make it required for this component
 }
 
-function Row(props: RowProps) {
+function DrivingSkill(props: DrivingSkillDropDown) {
   const stages = [
     "Introduced",
     "Talk Through",
@@ -39,4 +37,4 @@ function Row(props: RowProps) {
   );
 }
 
-export default Row;
+export default DrivingSkill;
