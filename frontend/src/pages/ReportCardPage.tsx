@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DrivingSkill from "../components/DrivingSkill";
-import formatProgressReport from "../components/formatProgressReport";
-import { drivingSkillsList } from "../drivingSkillsList";
+import formatProgressReport from "../utils/formatProgressReport";
+import { noviceSkillsList } from "../models/drivingSkillsList";
+import {
+  fetchSinglePupil,
+  savePupil,
+  sendProgressReport,
+} from "../services/apiServices";
 
 const Card: React.FC = () => {
-  const { id } = useParams<{ id?: string }>();
+  const { id } = useParams<{ id: string }>();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
-  const [progressRecords, setProgressRecords] = useState(drivingSkillsList);
+  const [progressRecords, setProgressRecords] = useState(noviceSkillsList);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
-      // Fetch existing pupil data when id is present
-      const fetchPupilData = async () => {
+      const fetchData = async () => {
         try {
-          const response = await fetch(
-            `http://localhost:4000/api/pupils/${id}`
-          );
-          const pupil = await response.json();
-          if (response.ok) {
-            setFirstName(pupil.firstName);
-            setLastName(pupil.lastName);
-            setEMail(pupil.eMail);
-            setProgressRecords(pupil.progressRecords);
-          } else {
-            setError(pupil.error || "An error occurred");
-          }
+          const pupil = await fetchSinglePupil(id);
+          setFirstName(pupil.firstName);
+          setLastName(pupil.lastName);
+          setEMail(pupil.eMail);
+          setProgressRecords(pupil.progressRecords);
         } catch (error) {
-          setError("Failed to fetch pupil data.");
+          // console.log(error.message);
         }
       };
 
-      fetchPupilData();
+      fetchData();
     }
   }, [id]);
 
@@ -43,63 +40,34 @@ const Card: React.FC = () => {
     const reportHtml = formatProgressReport({
       firstName,
       lastName,
-      drivingSkillsList,
+      noviceSkillsList,
       _id: "",
       eMail: "",
-      createdAt: "",
     });
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/pupils/send-report",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            to: eMail,
-            subject: "Your Progress Report",
-            html: reportHtml,
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (response.ok) {
-        alert("Report sent successfully");
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to send report: ${errorData.error}`);
-      }
+      await sendProgressReport({
+        to: eMail,
+        subject: "Your Progress Report",
+        html: reportHtml,
+      });
+      alert("Report sent successfully");
     } catch (error) {
-      alert("An error occurred while sending the report.");
+      // alert(error.message);
     }
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const pupil = { firstName, lastName, eMail, progressRecords };
-
-    try {
-      const response = id
-        ? await fetch(`http://localhost:4000/api/pupils/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(pupil),
-            headers: { "Content-Type": "application/json" },
-          })
-        : await fetch("http://localhost:4000/api/pupils", {
-            method: "POST",
-            body: JSON.stringify(pupil),
-            headers: { "Content-Type": "application/json" },
-          });
-
-      if (!response.ok) {
-        const json = await response.json();
-        setError(json.error);
-      } else {
+    if (id) {
+      try {
+        await savePupil(id, pupil);
         navigate("/");
+      } catch (error) {
+        setError((error as Error).message);
       }
-    } catch (error) {
-      setError("An error occurred while saving the pupil.");
     }
   };
 
@@ -112,7 +80,7 @@ const Card: React.FC = () => {
       });
 
       if (response.ok) {
-        navigate("/"); // Redirect after successful deletion
+        navigate("/");
       } else {
         const errorData = await response.json();
         setError(errorData.error);
@@ -124,7 +92,6 @@ const Card: React.FC = () => {
 
   return (
     <div id="root">
-      {/* <img src={Logo} className="logo" alt="Driving School Logo" /> */}
       <div className="progress-container">
         <form className="create" onSubmit={handleSubmit}>
           {id && (

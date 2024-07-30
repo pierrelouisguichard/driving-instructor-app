@@ -1,18 +1,12 @@
-import { DrivingSkillInterface } from "../interface/DrivingSkillInterface";
+import React from "react";
+import { DrivingSkillInterface } from "../interface/Interfaces";
+import { stages } from "../constants/skillsConstants";
 
 interface DrivingSkillDropDown extends DrivingSkillInterface {
-  onStageChange: (stage: string) => void; // Make it required for this component
+  onStageChange: (stage: string) => void;
 }
 
 function DrivingSkill(props: DrivingSkillDropDown) {
-  const stages = [
-    "Introduced",
-    "Talk Through",
-    "Prompted",
-    "Rarely Prompted",
-    "Independent",
-  ];
-
   const { variable, stage, onStageChange } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -20,11 +14,11 @@ function DrivingSkill(props: DrivingSkillDropDown) {
   };
 
   return (
-    <div className="row-container">
-      <div className="variable">
+    <div>
+      <div>
         <p>{variable}</p>
       </div>
-      <div className="progress-dropdown">
+      <div>
         <select value={stage} onChange={handleChange}>
           {stages.map((stageOption, index) => (
             <option key={index} value={stageOption}>

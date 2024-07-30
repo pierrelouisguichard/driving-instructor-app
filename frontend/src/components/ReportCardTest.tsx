@@ -1,18 +1,18 @@
-import formatProgressReport from "./components/formatProgressReport";
-import { drivingSkillsList } from "./drivingSkillsList";
+import formatProgressReport from "../utils/formatProgressReport";
+import { noviceSkillsList } from "../models/drivingSkillsList";
 
 function ReportCardTest() {
   const firstName: string = "John";
   const lastName: string = "Doe";
+
   return (
     <div>
       {formatProgressReport({
         firstName,
         lastName,
-        drivingSkillsList,
+        noviceSkillsList: noviceSkillsList,
         _id: "",
         eMail: "",
-        createdAt: "",
       })}
     </div>
   );

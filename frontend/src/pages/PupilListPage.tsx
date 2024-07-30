@@ -1,91 +1,126 @@
-// Pupil.tsx
-import { useEffect, useState } from "react";
-import PupilDetails from "../components/PupilDetails";
-import PupilInterface from "../interface/PupilInterface";
+import React, { useEffect, useState } from "react";
+import { PupilInterface } from "../interface/Interfaces";
 import { useNavigate } from "react-router-dom";
+import { fetchAllPupils } from "../services/apiServices";
+import styled from "styled-components";
 
-// Constants for the API endpoint
-const PUPILS_API_URL = "http://localhost:4000/api/pupils";
-
-// Custom hook for fetching pupils
-const useFetchPupils = () => {
-  const [pupils, setPupils] = useState<PupilInterface[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+// This is the landing page which displays a list of all pupils.
+const PupilListPage: React.FC = () => {
+  const [pupilsList, setPupilsList] = useState<PupilInterface[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
+  // Fetches a list of all pupils
   useEffect(() => {
-    const fetchPupils = async () => {
+    const loadPupils = async () => {
       try {
-        const response = await fetch(PUPILS_API_URL);
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        setPupils(data);
+        const data = await fetchAllPupils();
+        setPupilsList(data);
       } catch (error) {
-        console.error("Error fetching pupils:", error);
         setError("Failed to fetch pupils. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchPupils();
+    loadPupils();
   }, []);
 
-  return { pupils, loading, error };
-};
-
-function Pupil() {
-  const { pupils, loading, error } = useFetchPupils();
-  const navigate = useNavigate();
-
-  const handleNavigate = (pupilId: string) => {
+  const handleNavigate = (pupilId: string): void => {
     navigate(`/card/${pupilId}`);
   };
 
-  const handleNew = () => {
+  const handleNew = (): void => {
     navigate("/card");
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (error) {
+    return <ErrorMessage>{error}</ErrorMessage>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (pupilsList === null) {
+    return <LoadingMessage>Loading...</LoadingMessage>;
   }
 
   return (
-    <div>
-      <h2>Pupil List</h2>
-      <button onClick={handleNew} className="button-new">
-        New
-      </button>
-      <div className="pupils">
-        {pupils &&
-          pupils.map((pupil) => (
-            <div key={pupil._id}>
-              <button
-                onClick={() => handleNavigate(pupil._id)}
-                className="pupil-button"
-              >
-                <PupilDetails
-                  firstName={pupil.firstName}
-                  lastName={pupil.lastName}
-                  _id={""}
-                  eMail={""}
-                  createdAt={""}
-                  drivingSkillsList={[]}
-                />
-              </button>
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-}
+    <Container>
+      <Title>Pupil List</Title>
+      <Button onClick={handleNew}>New</Button>
 
-export default Pupil;
+      {pupilsList.length === 0 ? (
+        <NoPupilsMessage>No pupils found.</NoPupilsMessage>
+      ) : (
+        // Display each pupil's name in a button for navigation
+        <PupilListContainer>
+          {pupilsList.map((pupil) => (
+            <PupilButton
+              key={pupil._id}
+              onClick={() => handleNavigate(pupil._id)}
+            >
+              {`${pupil.firstName} ${pupil.lastName}`}
+            </PupilButton>
+          ))}
+        </PupilListContainer>
+      )}
+    </Container>
+  );
+};
+
+export default PupilListPage;
+
+// Styles
+const Container = styled.div`
+  padding: 20px;
+  text-align: center;
+`;
+
+const Title = styled.h2`
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const PupilListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const PupilButton = styled.button`
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  margin: 20px 0;
+`;
+
+const LoadingMessage = styled.div`
+  margin: 20px 0;
+`;
+
+const NoPupilsMessage = styled.div`
+  margin: 20px 0;
+`;
