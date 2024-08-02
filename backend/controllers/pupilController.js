@@ -38,8 +38,22 @@ const getPupil = async (req, res) => {
 
 const createPupil = async (req, res) => {
   try {
-    const { firstName, lastName, eMail, progressRecords } = req.body;
-    const pupil = new Pupil({ firstName, lastName, eMail, progressRecords });
+    const {
+      firstName,
+      lastName,
+      eMail,
+      noviceSkillsList,
+      intermediateSkillsList,
+      advancedSkillsList,
+    } = req.body;
+    const pupil = new Pupil({
+      firstName,
+      lastName,
+      eMail,
+      noviceSkillsList,
+      intermediateSkillsList,
+      advancedSkillsList,
+    });
     await pupil.save();
     res.status(201).json(pupil);
   } catch (error) {
