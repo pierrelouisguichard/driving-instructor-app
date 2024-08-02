@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { PupilInterface } from "../interface/Interfaces";
+import { PupilWithID } from "../interface/Interfaces";
 import { useNavigate } from "react-router-dom";
 import { fetchAllPupils } from "../services/apiServices";
 import styled from "styled-components";
 
 // This is the landing page which displays a list of all pupils.
 const PupilListPage: React.FC = () => {
-  const [pupilsList, setPupilsList] = useState<PupilInterface[] | null>(null);
+  const [pupilsList, setPupilsList] = useState<PupilWithID[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 

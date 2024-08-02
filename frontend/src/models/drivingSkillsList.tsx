@@ -1,27 +1,23 @@
-import { DrivingSkillInterface } from "../interface/Interfaces";
+// Importing constants and interfaces
 import {
   advancedSkills,
   intermediateSkills,
   noviceSkills,
   stages,
 } from "../constants/skillsConstants";
+import { DrivingSkill } from "../interface/Interfaces";
 
-export const noviceSkillsList: DrivingSkillInterface[] = noviceSkills.map(
-  (variable) => ({
+// Helper function to generate a default skills list with the initial stage set to "Introduced"
+const generateDefaultSkillsList = (skills: string[]): DrivingSkill[] =>
+  skills.map((variable) => ({
     variable,
     stage: stages[0], // Default to the first stage, "Introduced"
-  })
-);
-
-export const intermediateSkillsList: DrivingSkillInterface[] =
-  intermediateSkills.map((variable) => ({
-    variable,
-    stage: stages[0],
   }));
 
-export const advancedSkillsList: DrivingSkillInterface[] = advancedSkills.map(
-  (variable) => ({
-    variable,
-    stage: stages[0],
-  })
-);
+// Generate default lists of driving skills (novice, intermediate, and advanced) using the helper function
+export const defaultNoviceSkillsList: DrivingSkill[] =
+  generateDefaultSkillsList(noviceSkills);
+export const defaultIntermediateSkillsList: DrivingSkill[] =
+  generateDefaultSkillsList(intermediateSkills);
+export const defaultAdvancedSkillsList: DrivingSkill[] =
+  generateDefaultSkillsList(advancedSkills);

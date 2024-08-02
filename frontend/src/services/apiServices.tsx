@@ -1,19 +1,17 @@
-// src/api/pupilApi.ts
-
 import { ReactNode } from "react";
-import { DrivingSkillInterface, PupilInterface } from "../interface/Interfaces";
+import { Pupil, PupilWithID } from "../interface/Interfaces";
 
 const PUPILS_API_URL = "http://localhost:4000/api/pupils/";
 
-/**
- * Fetches the list of pupils from the specified API endpoint.
- * Returns an array of PupilInterface objects if successful.
- * Handles various HTTP errors and logs them to the console.
- *
- * @returns {Promise<PupilInterface[]>} An array of pupil objects.
- * @throws Will throw an error if the fetch operation fails or the response is not OK.
+/*
+ * Handles interactions with external APIs, centralising API logic.
+ * Manages operations including:
+ * - Fetching all pupils
+ * - Retrieving individual pupil data
+ * - Sending reports via email
+ * - Creating, updating, and deleting pupil records
  */
-export const fetchAllPupils = async (): Promise<PupilInterface[]> => {
+export const fetchAllPupils = async (): Promise<PupilWithID[]> => {
   try {
     const response = await fetch(PUPILS_API_URL);
 
@@ -28,7 +26,7 @@ export const fetchAllPupils = async (): Promise<PupilInterface[]> => {
       }
     }
 
-    const data: PupilInterface[] = await response.json();
+    const data: PupilWithID[] = await response.json();
     return data;
   } catch (error) {
     console.error("Error fetching pupils:", error);
@@ -40,7 +38,7 @@ export const fetchAllPupils = async (): Promise<PupilInterface[]> => {
   }
 };
 
-export const fetchSinglePupil = async (id: string): Promise<any> => {
+export const fetchSinglePupil = async (id: string): Promise<PupilWithID> => {
   const url = `${PUPILS_API_URL}${id}`;
 
   try {
@@ -48,7 +46,6 @@ export const fetchSinglePupil = async (id: string): Promise<any> => {
     const pupil = await response.json();
 
     if (!response.ok) {
-      // If the response is not OK, throw an error with a relevant message
       throw new Error(
         pupil.error || "An error occurred while fetching the pupil data."
       );
@@ -56,7 +53,6 @@ export const fetchSinglePupil = async (id: string): Promise<any> => {
 
     return pupil;
   } catch (error) {
-    // Log the error and rethrow a more generic error for the caller
     console.error(`Failed to fetch pupil with ID ${id}:`, error);
     throw new Error("Failed to fetch pupil data.");
   }
@@ -88,17 +84,15 @@ export const sendProgressReport = async (
   }
 };
 
-interface Pupil {
-  firstName: string;
-  lastName: string;
-  eMail: string;
-  progressRecords: DrivingSkillInterface[];
-}
-
-export const savePupil = async (id: string, pupil: Pupil): Promise<void> => {
-  const url = id
-    ? `http://localhost:4000/api/pupils/${id}`
-    : "http://localhost:4000/api/pupils";
+/*
+ * This method creates a new pupil if no ID is provided,
+ * or updates an existing pupil if an ID is present.
+ */
+export const savePupil = async (
+  id: string | undefined,
+  pupil: Pupil
+): Promise<void> => {
+  const url = id ? `${PUPILS_API_URL}${id}` : `${PUPILS_API_URL}`;
   const method = id ? "PATCH" : "POST";
 
   try {
@@ -115,5 +109,28 @@ export const savePupil = async (id: string, pupil: Pupil): Promise<void> => {
   } catch (error) {
     console.error("Error saving pupil:", error);
     throw new Error("An error occurred while saving the pupil.");
+  }
+};
+
+export const deletePupil = async (
+  id: string
+): Promise<{ success: boolean }> => {
+  if (!id) return { success: false };
+
+  try {
+    const response = await fetch(`${PUPILS_API_URL}${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const error = await response.json();
+      console.error("Error deleting pupil:", error);
+      return { success: false };
+    }
+  } catch (error) {
+    console.error("Error deleting pupil:", error);
+    return { success: false };
   }
 };

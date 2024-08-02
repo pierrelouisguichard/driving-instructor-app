@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import Card from "./pages/ReportCardPage";
+import ReportCardPage from "./pages/ReportCardPage";
 import PupilListPage from "./pages/PupilListPage";
-import ReportCardTest from "./components/ReportCardTest";
+import ProgressReportPage from "./pages/ProgressReportPage";
 import LoginPage from "./pages/LoginPage";
 
 function App() {
@@ -9,10 +9,10 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<PupilListPage />} />
-        <Route path="/card" element={<Card />} />
-        <Route path="/card/:id" element={<Card />} />
+        <Route path="/card" element={<ReportCardPage />} />
+        <Route path="/card/:id" element={<ReportCardPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/reportcardtest" element={<ReportCardTest />} />
+        <Route path="/test" element={<ProgressReportPage />} />
       </Routes>
     </>
   );
