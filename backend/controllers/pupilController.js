@@ -10,9 +10,6 @@ const getAllPupils = async (req, res) => {
   try {
     const pupils = await Pupil.find({}).sort({ createdAt: -1 });
 
-    // Set caching headers to disable caching (for development)
-    res.setHeader("Cache-Control", "no-store");
-
     res.status(200).json(pupils);
   } catch (error) {
     console.error("Errorr fetching pupils:", error);
@@ -80,28 +77,23 @@ const deletePupil = async (req, res) => {
 const updatePupil = async (req, res) => {
   const { id } = req.params;
 
-  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Invalid Pupil ID" }); // Use 400 for bad request
+    return res.status(400).json({ error: "Invalid Pupil ID" });
   }
 
   try {
-    // Update pupil document
     const pupil = await Pupil.findOneAndUpdate(
       { _id: id },
-      { ...req.body }, // Use spread to update fields
-      { new: true, runValidators: true } // Return updated document and run validators
+      { ...req.body },
+      { new: true, runValidators: true }
     );
 
-    // Check if pupil was found
     if (!pupil) {
       return res.status(404).json({ error: "Pupil Not Found" });
     }
 
-    // Return the updated pupil
     res.status(200).json(pupil);
   } catch (error) {
-    // Handle any unexpected errors
     console.error(error);
     res
       .status(500)
@@ -110,7 +102,7 @@ const updatePupil = async (req, res) => {
 };
 
 const transporter = nodemailer.createTransport({
-  service: "hotmail", // Use your email service
+  service: "hotmail",
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,

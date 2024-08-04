@@ -3,7 +3,7 @@ import { DrivingSkillWithMethod } from "../interface/Interfaces";
 import { stages } from "../constants/skillsConstants";
 
 // This component allows users to select the progression stage of a skill.
-function DrivingSkill(props: DrivingSkillWithMethod) {
+function StageSelectionComponent(props: DrivingSkillWithMethod) {
   const { variable, stage, onStageChange } = props;
 
   const handleStageChange = (selectedStage: string) => {
@@ -29,7 +29,7 @@ function DrivingSkill(props: DrivingSkillWithMethod) {
   );
 }
 
-export default DrivingSkill;
+export default StageSelectionComponent;
 
 // Styles
 const Container = styled.div`

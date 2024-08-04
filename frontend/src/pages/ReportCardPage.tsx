@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import DrivingSkill from "../components/DrivingSkill";
+import StageSelectionComponent from "../components/StageSelectionComponent";
 import formatProgressReport from "../utils/formatProgressReport";
 import {
   deletePupil,
@@ -139,7 +139,7 @@ const ReportCardPage: React.FC = () => {
     <div>
       <h2>{title}</h2>
       {skillsList.map((record, index) => (
-        <DrivingSkill
+        <StageSelectionComponent
           key={index}
           variable={record.variable}
           stage={record.stage}
