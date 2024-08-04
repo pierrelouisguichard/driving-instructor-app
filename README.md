@@ -1,6 +1,6 @@
-# MERN Stack Application
+# Driving Instructor App
 
-Welcome to the MERN Stack Application! This is a simple app built with MongoDB, Express, React, and Node.js. Below you'll find instructions on how to set up, run, and contribute to this project.
+Welcome to the Driving Instructor App! This is a simple app built with MongoDB, Express, React, and Node.js. Below you'll find instructions on how to set up, run, and contribute to this project.
 
 
 ## Installation
@@ -45,8 +45,7 @@ Welcome to the MERN Stack Application! This is a simple app built with MongoDB, 
    npm run dev
    ```
    
-
-  ## Contributing
+## Contributing
 
 We welcome contributions to this project! If you'd like to contribute, please follow these steps:
 
