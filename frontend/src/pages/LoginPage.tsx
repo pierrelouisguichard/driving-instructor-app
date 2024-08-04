@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -19,33 +20,93 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
+    <LoginContainer>
+      <Heading>Login</Heading>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label htmlFor="username">Username:</Label>
+          <Input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="password">Password:</Label>
+          <Input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+        </FormGroup>
+        <SubmitButton type="submit">Login</SubmitButton>
+      </Form>
+    </LoginContainer>
   );
 }
 
 export default LoginPage;
+
+//Styles
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+`;
+
+const Heading = styled.h2`
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
