@@ -47,17 +47,17 @@ Welcome to the Driving Instructor App! This is a simple app built with MongoDB, 
    
 ## Contributing
 
-We welcome contributions to this project! If you'd like to contribute, please follow these steps:
+Please follow these steps:
 
-     ```bash
-     git checkout -b <your-branch-name>
+   ```bash
+   git checkout -b <your-branch-name>
      
-     git add .
+   git add .
      
-     git commit -m "Add new feature or fix issue"
+   git commit -m "Add new feature or fix issue"
 
-     git push origin <your-branch-name>
-     ```
+   git push origin <your-branch-name>
+   ```
 
 
 Thank you for contributing!
