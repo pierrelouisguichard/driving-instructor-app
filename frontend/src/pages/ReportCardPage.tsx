@@ -16,16 +16,11 @@ import {
   defaultIntermediateSkillsList,
   defaultNoviceSkillsList,
 } from "../models/drivingSkillsList";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 
-/*
- * This is the Report Card page (/card). It is used to:
- * - Create a new pupil if no ID is present in the URL.
- * - Edit and update the details of an existing pupil if an ID is included in the URL.
- * - Fill out and send the progress record.
- */
 const ReportCardPage: React.FC = () => {
   const [showPupilDetails, setShowPupilDetails] = useState(true);
-  const { id } = useParams<{ id: string }>(); // Extract the id from the url.
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -39,14 +34,18 @@ const ReportCardPage: React.FC = () => {
   );
   const [error, setError] = useState("");
 
-  // State to track visibility of each skills section
   const [visibleSections, setVisibleSections] = useState({
     novice: true,
     intermediate: true,
     advanced: true,
   });
 
-  // This method fetches pupil details and populates the fields if an ID is present in the URL.
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogDescription, setDialogDescription] = useState("");
+  const [dialogAction, setDialogAction] = useState<(() => void) | null>(null);
+  const [singleButton, setSingleButton] = useState(false); // New state for single button dialog
+
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
@@ -66,58 +65,103 @@ const ReportCardPage: React.FC = () => {
     }
   }, [id]);
 
-  const handleSendReport = async () => {
-    const reportHtml = formatProgressReport({
-      firstName,
-      lastName,
-      eMail,
-      noviceSkillsList,
-      intermediateSkillsList,
-      advancedSkillsList,
-    });
-
-    try {
-      await sendProgressReport({
-        to: eMail,
-        subject: "Your Progress Report",
-        html: reportHtml,
+  const handleSendReport = () => {
+    setDialogTitle("Send Report");
+    setDialogDescription(
+      `Are you sure you want to send the report for <strong>${firstName} ${lastName}</strong>?`
+    );
+    setDialogAction(() => async () => {
+      const reportHtml = formatProgressReport({
+        firstName,
+        lastName,
+        eMail,
+        noviceSkillsList,
+        intermediateSkillsList,
+        advancedSkillsList,
       });
-      alert("Report sent successfully");
-    } catch (error) {
-      alert((error as Error).message);
-    }
-  };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const pupil = {
-      firstName,
-      lastName,
-      eMail,
-      noviceSkillsList,
-      intermediateSkillsList,
-      advancedSkillsList,
-    };
-
-    try {
-      await savePupil(id, pupil);
-      navigate("/");
-    } catch (error) {
-      setError((error as Error).message);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (id) {
       try {
-        const result = await deletePupil(id);
-        if (result.success) {
-          navigate("/");
-        }
+        await sendProgressReport({
+          to: eMail,
+          subject: "Your Progress Report",
+          html: reportHtml,
+        });
+        alert("Report sent successfully");
+        setDialogOpen(false);
+      } catch (error) {
+        alert((error as Error).message);
+        setDialogOpen(false);
+      }
+    });
+    setSingleButton(false); // Set to false since we want both confirm and cancel buttons
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!firstName || !lastName || !eMail) {
+      setDialogTitle("Missing Information");
+      setDialogDescription(
+        `The following fields cannot be empty <strong>:\n${
+          !firstName ? "First Name,\n\n\n" : ""
+        }${!lastName ? "Last Name,\n\n\n" : ""}${
+          !eMail ? "Email Address" : ""
+        }</strong>`
+      );
+      setSingleButton(true); // Show only one button (Okay) for missing information
+      setDialogOpen(true);
+      return;
+    }
+
+    setDialogTitle(id ? "Save Changes" : "Add Pupil");
+    setDialogDescription(
+      id
+        ? `Are you sure you want to save changes for <strong>${firstName} ${lastName}</strong>?`
+        : `Are you sure you want to add <strong>${firstName} ${lastName}</strong>?`
+    );
+    setDialogAction(() => async () => {
+      const pupil = {
+        firstName,
+        lastName,
+        eMail,
+        noviceSkillsList,
+        intermediateSkillsList,
+        advancedSkillsList,
+      };
+
+      try {
+        await savePupil(id, pupil);
+        navigate("/");
       } catch (error) {
         setError((error as Error).message);
+      } finally {
+        setDialogOpen(false);
       }
+    });
+    setSingleButton(false); // Set to false since we want both confirm and cancel buttons
+    setDialogOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (id) {
+      setDialogTitle("Delete Pupil");
+      setDialogDescription(
+        `Are you sure you want to delete the pupil:\n<strong>${firstName} ${lastName}</strong>\n with email <strong>${eMail}</strong>?`
+      );
+      setDialogAction(() => async () => {
+        try {
+          const result = await deletePupil(id);
+          if (result.success) {
+            navigate("/");
+          }
+        } catch (error) {
+          setError((error as Error).message);
+        } finally {
+          setDialogOpen(false);
+        }
+      });
+      setSingleButton(false); // Set to false since we want both confirm and cancel buttons
+      setDialogOpen(true);
     }
   };
 
@@ -138,7 +182,6 @@ const ReportCardPage: React.FC = () => {
       setSkills(newSkills);
     };
 
-  // Function to toggle visibility of each skills section
   const toggleSectionVisibility = (section: keyof typeof visibleSections) => {
     setVisibleSections((prevState) => ({
       ...prevState,
@@ -146,13 +189,11 @@ const ReportCardPage: React.FC = () => {
     }));
   };
 
-  // This method iterates through skills in a category (novice, intermediate, advanced)
-  // and creates a DrivingSkill component for each, allowing progress stage selection for each skill.
   const renderSkillsSection = (
     title: string,
     skillsList: any[],
     setSkills: React.Dispatch<React.SetStateAction<any[]>>,
-    sectionKey: keyof typeof visibleSections // added parameter
+    sectionKey: keyof typeof visibleSections
   ) => (
     <SkillDiv>
       <SectionHeader>
@@ -232,24 +273,23 @@ const ReportCardPage: React.FC = () => {
         )}
 
         <SkillsContainer>
-          {/* <h1>Skills List</h1> */}
           {renderSkillsSection(
             "NOVICE",
             noviceSkillsList,
             setNoviceSkills,
-            "novice" // pass section key
+            "novice"
           )}
           {renderSkillsSection(
             "INTERMEDIATE",
             intermediateSkillsList,
             setIntermediateSkills,
-            "intermediate" // pass section key
+            "intermediate"
           )}
           {renderSkillsSection(
             "ADVANCED",
             advancedSkillsList,
             setAdvancedSkills,
-            "advanced" // pass section key
+            "advanced"
           )}
         </SkillsContainer>
 
@@ -271,6 +311,17 @@ const ReportCardPage: React.FC = () => {
         </ButtonContainer>
         {error && <Error>{error}</Error>}
       </Form>
+
+      <ConfirmationDialog
+        open={dialogOpen}
+        title={dialogTitle}
+        description={dialogDescription}
+        onConfirm={() => {
+          if (dialogAction) dialogAction();
+        }}
+        onCancel={() => setDialogOpen(false)}
+        singleButton={singleButton} // Pass the new singleButton prop to the dialog
+      />
     </Container>
   );
 };
