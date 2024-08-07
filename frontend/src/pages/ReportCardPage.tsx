@@ -146,7 +146,7 @@ const ReportCardPage: React.FC = () => {
     if (id) {
       setDialogTitle("Delete Pupil");
       setDialogDescription(
-        `Are you sure you want to delete the pupil:\n<strong>${firstName} ${lastName}</strong>\n<strong>${eMail}</strong>?`
+        `Are you sure you want to delete the pupil:\n<strong>${firstName} ${lastName}</strong>\n with email <strong>${eMail}</strong>?`
       );
       setDialogAction(() => async () => {
         try {
