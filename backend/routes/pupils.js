@@ -8,8 +8,12 @@ const {
   updatePupil,
   sendReport,
 } = require("../controllers/pupilController");
+const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
+
+// middleware which requires with for all routes
+router.use(requireAuth);
 
 router.get("/", getAllPupils);
 

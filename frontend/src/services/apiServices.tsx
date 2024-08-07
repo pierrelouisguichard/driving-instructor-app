@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Pupil, PupilWithID } from "../interface/Interfaces";
+import { Pupil, PupilWithID, User } from "../interface/Interfaces";
 
 const PUPILS_API_URL = "http://localhost:4000/api/pupils/";
 
@@ -11,9 +11,13 @@ const PUPILS_API_URL = "http://localhost:4000/api/pupils/";
  * - Sending reports via email
  * - Creating, updating, and deleting pupil records
  */
-export const fetchAllPupils = async (): Promise<PupilWithID[]> => {
+export const fetchAllPupils = async (user: User): Promise<PupilWithID[]> => {
   try {
-    const response = await fetch(PUPILS_API_URL);
+    const response = await fetch(PUPILS_API_URL, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
 
     if (!response.ok) {
       switch (response.status) {
@@ -38,11 +42,18 @@ export const fetchAllPupils = async (): Promise<PupilWithID[]> => {
   }
 };
 
-export const fetchSinglePupil = async (id: string): Promise<PupilWithID> => {
+export const fetchSinglePupil = async (
+  id: string,
+  user: User
+): Promise<PupilWithID> => {
   const url = `${PUPILS_API_URL}${id}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
     const pupil = await response.json();
 
     if (!response.ok) {
@@ -58,20 +69,24 @@ export const fetchSinglePupil = async (id: string): Promise<PupilWithID> => {
   }
 };
 
-interface ReportPayload {
+export interface ReportPayload {
   to: string;
   subject: string;
   html: ReactNode;
 }
 
 export const sendProgressReport = async (
-  payload: ReportPayload
+  payload: ReportPayload,
+  user: User
 ): Promise<void> => {
   try {
     const response = await fetch(`${PUPILS_API_URL}send-report`, {
       method: "POST",
       body: JSON.stringify(payload),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
     });
 
     if (!response.ok) {
@@ -90,7 +105,8 @@ export const sendProgressReport = async (
  */
 export const savePupil = async (
   id: string | undefined,
-  pupil: Pupil
+  pupil: Pupil,
+  user: User
 ): Promise<void> => {
   const url = id ? `${PUPILS_API_URL}${id}` : `${PUPILS_API_URL}`;
   const method = id ? "PATCH" : "POST";
@@ -99,7 +115,10 @@ export const savePupil = async (
     const response = await fetch(url, {
       method,
       body: JSON.stringify(pupil),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
     });
 
     if (!response.ok) {
@@ -113,13 +132,17 @@ export const savePupil = async (
 };
 
 export const deletePupil = async (
-  id: string
+  id: string,
+  user: User
 ): Promise<{ success: boolean }> => {
   if (!id) return { success: false };
 
   try {
     const response = await fetch(`${PUPILS_API_URL}${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     });
 
     if (response.ok) {

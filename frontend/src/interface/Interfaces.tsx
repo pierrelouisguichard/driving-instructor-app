@@ -19,3 +19,8 @@ export interface DrivingSkill {
 export interface DrivingSkillWithMethod extends DrivingSkill {
   onStageChange: (stage: string) => void;
 }
+
+export interface User {
+  email: string;
+  token: string;
+}

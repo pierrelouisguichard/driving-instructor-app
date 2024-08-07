@@ -25,6 +25,10 @@ const pupilSchema = new Schema(
     noviceSkillsList: [skillsSchema],
     intermediateSkillsList: [skillsSchema],
     advancedSkillsList: [skillsSchema],
+    user_id: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

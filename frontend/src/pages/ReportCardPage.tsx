@@ -17,10 +17,17 @@ import {
   defaultNoviceSkillsList,
 } from "../models/drivingSkillsList";
 import ConfirmationDialog from "../components/ConfirmationDialog";
+import { useAuthContext } from "../hooks/useAuthContext";
 
+/*
+ * This is the Report Card page (/card). It is used to:
+ * - Create a new pupil if no ID is present in the URL.
+ * - Edit and update the details of an existing pupil if an ID is included in the URL.
+ * - Fill out and send the progress record.
+ */
 const ReportCardPage: React.FC = () => {
   const [showPupilDetails, setShowPupilDetails] = useState(true);
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>(); // Extract the id from the url.
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -33,7 +40,9 @@ const ReportCardPage: React.FC = () => {
     defaultAdvancedSkillsList
   );
   const [error, setError] = useState("");
+  const { user } = useAuthContext();
 
+  // State to track visibility of each skills section
   const [visibleSections, setVisibleSections] = useState({
     novice: true,
     intermediate: true,
@@ -46,11 +55,12 @@ const ReportCardPage: React.FC = () => {
   const [dialogAction, setDialogAction] = useState<(() => void) | null>(null);
   const [singleButton, setSingleButton] = useState(false); // New state for single button dialog
 
+  // This method fetches pupil details and populates the fields if an ID is present in the URL.
   useEffect(() => {
-    if (id) {
+    if (id && user) {
       const fetchData = async () => {
         try {
-          const pupil = await fetchSinglePupil(id);
+          const pupil = await fetchSinglePupil(id, user);
           setFirstName(pupil.firstName);
           setLastName(pupil.lastName);
           setEMail(pupil.eMail);
@@ -63,9 +73,13 @@ const ReportCardPage: React.FC = () => {
       };
       fetchData();
     }
-  }, [id]);
+  }, [id, user]);
 
   const handleSendReport = () => {
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
     setDialogTitle("Send Report");
     setDialogDescription(
       `Are you sure you want to send the report for <strong>${firstName} ${lastName}</strong>?`
@@ -81,11 +95,14 @@ const ReportCardPage: React.FC = () => {
       });
 
       try {
-        await sendProgressReport({
-          to: eMail,
-          subject: "Your Progress Report",
-          html: reportHtml,
-        });
+        await sendProgressReport(
+          {
+            to: eMail,
+            subject: "Your Progress Report",
+            html: reportHtml,
+          },
+          user
+        );
         alert("Report sent successfully");
         setDialogOpen(false);
       } catch (error) {
@@ -99,6 +116,10 @@ const ReportCardPage: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
     if (!firstName || !lastName || !eMail) {
       setDialogTitle("Missing Information");
       setDialogDescription(
@@ -130,7 +151,7 @@ const ReportCardPage: React.FC = () => {
       };
 
       try {
-        await savePupil(id, pupil);
+        await savePupil(id, pupil, user);
         navigate("/");
       } catch (error) {
         setError((error as Error).message);
@@ -143,14 +164,14 @@ const ReportCardPage: React.FC = () => {
   };
 
   const handleDelete = () => {
-    if (id) {
+    if (id && user) {
       setDialogTitle("Delete Pupil");
       setDialogDescription(
         `Are you sure you want to delete the pupil:\n<strong>${firstName} ${lastName}</strong>\n with email <strong>${eMail}</strong>?`
       );
       setDialogAction(() => async () => {
         try {
-          const result = await deletePupil(id);
+          const result = await deletePupil(id, user);
           if (result.success) {
             navigate("/");
           }
@@ -182,6 +203,7 @@ const ReportCardPage: React.FC = () => {
       setSkills(newSkills);
     };
 
+  // Function to toggle visibility of each skills section
   const toggleSectionVisibility = (section: keyof typeof visibleSections) => {
     setVisibleSections((prevState) => ({
       ...prevState,
@@ -189,6 +211,8 @@ const ReportCardPage: React.FC = () => {
     }));
   };
 
+  // This method iterates through skills in a category (novice, intermediate, advanced)
+  // and creates a DrivingSkill component for each, allowing progress stage selection for each skill.
   const renderSkillsSection = (
     title: string,
     skillsList: any[],
@@ -200,7 +224,8 @@ const ReportCardPage: React.FC = () => {
         <SectionTitle>{title}</SectionTitle>
         <ToggleSectionIcon
           type="button"
-          onClick={() => toggleSectionVisibility(sectionKey)}>
+          onClick={() => toggleSectionVisibility(sectionKey)}
+        >
           <FontAwesomeIcon
             icon={visibleSections[sectionKey] ? faEye : faEyeSlash}
             size="lg"
@@ -304,7 +329,8 @@ const ReportCardPage: React.FC = () => {
             <Button
               style={{ backgroundColor: "#830505" }}
               type="button"
-              onClick={handleDelete}>
+              onClick={handleDelete}
+            >
               Delete Pupil
             </Button>
           )}

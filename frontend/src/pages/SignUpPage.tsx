@@ -1,28 +1,28 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useLogin } from "../hooks/useLogin";
+import { useSignUp } from "../hooks/useSignUp";
 
-function LoginPage() {
+const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login, error, isLoading } = useLogin();
-  const navigate = useNavigate();
+  const { signUp, error, isLoading } = useSignUp();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await login(email, password);
+    await signUp(email, password);
   };
 
   return (
-    <LoginContainer>
-      <Heading>Login</Heading>
+    <SignUpContainer>
+      <Title>Sign Up</Title>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label htmlFor="username">Email:</Label>
+          <Label htmlFor="email">Email:</Label>
           <Input
-            type="text"
-            id="username"
+            type="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -39,19 +39,21 @@ function LoginPage() {
           />
         </FormGroup>
         <SubmitButton disabled={isLoading} type="submit">
-          Login
+          Sign Up
         </SubmitButton>
         {error && <ErrorMessage>{error}</ErrorMessage>}
       </Form>
-      <SignUpButton onClick={() => navigate("/signup")}>Sign Up</SignUpButton>
-    </LoginContainer>
+      <BackToLoginButton onClick={() => navigate("/login")}>
+        Login
+      </BackToLoginButton>
+    </SignUpContainer>
   );
-}
+};
 
-export default LoginPage;
+export default SignUpPage;
 
 // Styles
-const LoginContainer = styled.div`
+const SignUpContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,7 +62,7 @@ const LoginContainer = styled.div`
   background-color: #f0f0f0;
 `;
 
-const Heading = styled.h2`
+const Title = styled.h2`
   margin-bottom: 20px;
   color: #333;
 `;
@@ -110,7 +112,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-const SignUpButton = styled.button`
+const BackToLoginButton = styled.button`
   margin-top: 10px;
   padding: 10px 15px;
   border: none;
