@@ -7,8 +7,9 @@ const express = require("express");
 const router = express.Router();
 
 const getAllPupils = async (req, res) => {
+  const user_id = req.user._id;
   try {
-    const pupils = await Pupil.find({}).sort({ createdAt: -1 });
+    const pupils = await Pupil.find({ user_id }).sort({ createdAt: -1 });
 
     res.status(200).json(pupils);
   } catch (error) {
@@ -35,6 +36,7 @@ const getPupil = async (req, res) => {
 
 const createPupil = async (req, res) => {
   try {
+    const user_id = req.user._id;
     const {
       firstName,
       lastName,
@@ -50,6 +52,7 @@ const createPupil = async (req, res) => {
       noviceSkillsList,
       intermediateSkillsList,
       advancedSkillsList,
+      user_id,
     });
     await pupil.save();
     res.status(201).json(pupil);

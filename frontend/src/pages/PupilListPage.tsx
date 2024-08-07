@@ -3,26 +3,32 @@ import { PupilWithID } from "../interface/Interfaces";
 import { useNavigate } from "react-router-dom";
 import { fetchAllPupils } from "../services/apiServices";
 import styled from "styled-components";
+import { useLogout } from "../hooks/useLogout";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 // This is the landing page which displays a list of all pupils. (/)
 const PupilListPage: React.FC = () => {
   const [pupilsList, setPupilsList] = useState<PupilWithID[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { logout: logout } = useLogout();
+  const { user } = useAuthContext();
 
   // Fetches a list of all pupils
   useEffect(() => {
     const loadPupils = async () => {
-      try {
-        const data = await fetchAllPupils();
-        setPupilsList(data);
-      } catch (error) {
-        setError("Failed to fetch pupils. Please try again later.");
+      if (user) {
+        try {
+          const data = await fetchAllPupils(user);
+          setPupilsList(data);
+        } catch (error) {
+          setError("Failed to fetch pupils. Please try again later.");
+        }
       }
     };
 
     loadPupils();
-  }, []);
+  }, [user]);
 
   const handleNavigate = (pupilId: string): void => {
     navigate(`/card/${pupilId}`);
@@ -40,9 +46,15 @@ const PupilListPage: React.FC = () => {
     return <LoadingMessage>Loading...</LoadingMessage>;
   }
 
+  const handleLogOut = () => {
+    logout();
+  };
+
   return (
     <Container>
-      <Title>Pupil List</Title>
+      {user && <Title>{user.email} Pupil List</Title>}
+
+      <Button onClick={handleLogOut}>LogOut</Button>
       <Button onClick={handleNew}>New</Button>
 
       {pupilsList.length === 0 ? (
