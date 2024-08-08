@@ -2,19 +2,40 @@ import React, { useEffect, useState } from "react";
 import { PupilWithID } from "../interface/Interfaces";
 import { useNavigate } from "react-router-dom";
 import { fetchAllPupils } from "../services/apiServices";
-import styled from "styled-components";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
+import {
+  faArrowRightFromBracket,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  PupilButtonsContainer,
+  StyledBody,
+  StyledFaChevronRight,
+  StyledPupilButton,
+} from "../Styles/PupilListPage/Body.styled";
+import {
+  StyledHeader,
+  Logo,
+  StyledAddButton,
+  StyledContainer,
+  HeaderContainer,
+  IconContainer,
+  StyledFaSignOut,
+  StyledH1,
+  BoldText,
+  StyledText,
+} from "../Styles/PupilListPage/Header.styled";
+import logo from "../assets/Driving_School.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// This is the landing page which displays a list of all pupils. (/)
 const PupilListPage: React.FC = () => {
   const [pupilsList, setPupilsList] = useState<PupilWithID[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { logout: logout } = useLogout();
+  const { logout } = useLogout();
   const { user } = useAuthContext();
 
-  // Fetches a list of all pupils
   useEffect(() => {
     const loadPupils = async () => {
       if (user) {
@@ -39,11 +60,11 @@ const PupilListPage: React.FC = () => {
   };
 
   if (error) {
-    return <ErrorMessage>{error}</ErrorMessage>;
+    return <div>{error}</div>;
   }
 
   if (pupilsList === null) {
-    return <LoadingMessage>Loading...</LoadingMessage>;
+    return <div>Loading...</div>;
   }
 
   const handleLogOut = () => {
@@ -51,88 +72,48 @@ const PupilListPage: React.FC = () => {
   };
 
   return (
-    <Container>
-      {user && <Title>{user.email} Pupil List</Title>}
+    <>
+      <StyledHeader>
+        <HeaderContainer>
+          <Logo src={logo} alt="Driving School Logo" />
+          <StyledContainer>
+            <StyledH1>Welcome back!</StyledH1>
+            <StyledText>Logged in as: {user?.email}</StyledText>
+            <StyledText>
+              You have <BoldText>{pupilsList.length}</BoldText> pupils.
+            </StyledText>
+          </StyledContainer>
+          <IconContainer>
+            <StyledFaSignOut
+              icon={faArrowRightFromBracket}
+              onClick={handleLogOut}
+            />
+            <StyledAddButton onClick={handleNew}>
+              <FontAwesomeIcon icon={faUserPlus} />
+            </StyledAddButton>
+          </IconContainer>
+        </HeaderContainer>
+      </StyledHeader>
 
-      <Button onClick={handleLogOut}>LogOut</Button>
-      <Button onClick={handleNew}>New</Button>
-
-      {pupilsList.length === 0 ? (
-        <NoPupilsMessage>No pupils found.</NoPupilsMessage>
-      ) : (
-        // Display each pupil's name in a button for navigation
-        <PupilListContainer>
-          {pupilsList.map((pupil) => (
-            <PupilButton
-              key={pupil._id}
-              onClick={() => handleNavigate(pupil._id)}
-            >
-              {`${pupil.firstName} ${pupil.lastName}`}
-            </PupilButton>
-          ))}
-        </PupilListContainer>
-      )}
-    </Container>
+      <StyledBody>
+        {pupilsList.length === 0 ? (
+          <div className="no-pupils-message">No pupils found.</div>
+        ) : (
+          <PupilButtonsContainer>
+            {pupilsList.map((pupil) => (
+              <StyledPupilButton
+                key={pupil._id}
+                onClick={() => handleNavigate(pupil._id)}
+              >
+                {`${pupil.firstName} ${pupil.lastName}`}
+                <StyledFaChevronRight />
+              </StyledPupilButton>
+            ))}
+          </PupilButtonsContainer>
+        )}
+      </StyledBody>
+    </>
   );
 };
 
 export default PupilListPage;
-
-// Styles
-const Container = styled.div`
-  padding: 20px;
-  text-align: center;
-`;
-
-const Title = styled.h2`
-  color: #333;
-  margin-bottom: 20px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  margin: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const PupilListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const PupilButton = styled.button`
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f1f1f1;
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  margin: 20px 0;
-`;
-
-const LoadingMessage = styled.div`
-  margin: 20px 0;
-`;
-
-const NoPupilsMessage = styled.div`
-  margin: 20px 0;
-`;

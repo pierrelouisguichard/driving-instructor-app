@@ -1,8 +1,11 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleRight,
+  faArrowRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import StageSelectionComponent from "../components/StageSelectionComponent";
 import formatProgressReport from "../utils/formatProgressReport";
 import {
@@ -18,6 +21,27 @@ import {
 } from "../models/drivingSkillsList";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import { useAuthContext } from "../hooks/useAuthContext";
+import {
+  HeaderContainer,
+  Logo,
+  StyledFaSignOut,
+  StyledH1,
+  StyledHeader,
+} from "../Styles/ProgressReportPage/Header.styled";
+import logo from "../assets/Driving_School.png";
+import { useLogout } from "../hooks/useLogout";
+import {
+  Button,
+  ButtonContainer,
+  Container,
+  Form,
+  Input,
+  Label,
+  PupilDetailsContainer,
+  ToggleButton,
+  Error,
+  FieldWrapper,
+} from "../Styles/ProgressReportPage/Body.styled";
 
 /*
  * This is the Report Card page (/card). It is used to:
@@ -26,7 +50,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
  * - Fill out and send the progress record.
  */
 const ReportCardPage: React.FC = () => {
-  const [showPupilDetails, setShowPupilDetails] = useState(true);
+  const [showPupilDetails, setShowPupilDetails] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>(); // Extract the id from the url.
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -44,19 +68,25 @@ const ReportCardPage: React.FC = () => {
 
   // State to track visibility of each skills section
   const [visibleSections, setVisibleSections] = useState({
-    novice: true,
-    intermediate: true,
-    advanced: true,
+    novice: false,
+    intermediate: false,
+    advanced: false,
   });
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [dialogTitle, setDialogTitle] = useState("");
+  const { logout } = useLogout();
   const [dialogDescription, setDialogDescription] = useState("");
   const [dialogAction, setDialogAction] = useState<(() => void) | null>(null);
-  const [singleButton, setSingleButton] = useState(false); // New state for single button dialog
+  const [singleButton, setSingleButton] = useState<boolean>(false); // New state for single button dialog
 
   // This method fetches pupil details and populates the fields if an ID is present in the URL.
   useEffect(() => {
+    if (id) {
+      setShowPupilDetails(false);
+    } else {
+      setShowPupilDetails(true);
+    }
     if (id && user) {
       const fetchData = async () => {
         try {
@@ -219,19 +249,17 @@ const ReportCardPage: React.FC = () => {
     setSkills: React.Dispatch<React.SetStateAction<any[]>>,
     sectionKey: keyof typeof visibleSections
   ) => (
-    <SkillDiv>
-      <SectionHeader>
-        <SectionTitle>{title}</SectionTitle>
-        <ToggleSectionIcon
-          type="button"
-          onClick={() => toggleSectionVisibility(sectionKey)}
-        >
-          <FontAwesomeIcon
-            icon={visibleSections[sectionKey] ? faEye : faEyeSlash}
-            size="lg"
-          />
-        </ToggleSectionIcon>
-      </SectionHeader>
+    <>
+      <ToggleButton
+        type="button"
+        onClick={() => toggleSectionVisibility(sectionKey)}
+      >
+        <FontAwesomeIcon
+          icon={visibleSections[sectionKey] ? faAngleDown : faAngleRight}
+          size="lg"
+        />{" "}
+        {title}
+      </ToggleButton>
       {visibleSections[sectionKey] &&
         skillsList.map((record, index) => (
           <StageSelectionComponent
@@ -243,61 +271,77 @@ const ReportCardPage: React.FC = () => {
             }
           />
         ))}
-    </SkillDiv>
+    </>
   );
 
   const togglePupilDetails = () => {
     setShowPupilDetails((prevState) => !prevState);
   };
 
+  const handleLogOut = () => {
+    logout();
+  };
+
   return (
-    <Container>
-      <Form onSubmit={handleSubmit}>
-        <StudentName>
-          {id
-            ? `${firstName} ${lastName}'s Progress Record`
-            : "Add a New Pupil"}
-        </StudentName>
+    <>
+      <StyledHeader>
+        <HeaderContainer>
+          {" "}
+          <Logo src={logo} alt="Driving School Logo" />
+          <StyledH1>
+            {id
+              ? `${firstName} ${lastName}'s Progress Record`
+              : "Add a New Pupil"}
+          </StyledH1>
+          <StyledFaSignOut
+            icon={faArrowRightFromBracket}
+            onClick={handleLogOut}
+          />
+        </HeaderContainer>
+      </StyledHeader>
 
-        <ToggleButton type="button" onClick={togglePupilDetails}>
-          {showPupilDetails ? "Hide Pupil Details" : "Show Pupil Details"}
-        </ToggleButton>
+      <Container>
+        <Form onSubmit={handleSubmit}>
+          <ToggleButton type="button" onClick={togglePupilDetails}>
+            <FontAwesomeIcon
+              icon={showPupilDetails ? faAngleDown : faAngleRight}
+              size="lg"
+            />{" "}
+            Pupil Details
+          </ToggleButton>
+          {showPupilDetails && (
+            <>
+              <PupilDetailsContainer>
+                <FieldWrapper>
+                  <Label>First Name:</Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputChange(setFirstName)}
+                    value={firstName}
+                  />
+                </FieldWrapper>
 
-        {showPupilDetails && (
-          <>
-            <SectionTitle>Pupil Details</SectionTitle>
-            <PupilDetailsContainer>
-              <InputWrapper>
-                <Label>First Name:</Label>
-                <Input
-                  type="text"
-                  onChange={handleInputChange(setFirstName)}
-                  value={firstName}
-                />
-              </InputWrapper>
+                <FieldWrapper>
+                  <Label>Last Name:</Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputChange(setLastName)}
+                    value={lastName}
+                  />
+                </FieldWrapper>
 
-              <InputWrapper>
-                <Label>Last Name:</Label>
-                <Input
-                  type="text"
-                  onChange={handleInputChange(setLastName)}
-                  value={lastName}
-                />
-              </InputWrapper>
+                <FieldWrapper>
+                  <Label>Email:</Label>
+                  <Input
+                    type="email"
+                    onChange={handleInputChange(setEMail)}
+                    value={eMail}
+                  />
+                </FieldWrapper>
+              </PupilDetailsContainer>
+            </>
+          )}
 
-              <InputWrapper>
-                <Label>Email:</Label>
-                <Input
-                  type="email"
-                  onChange={handleInputChange(setEMail)}
-                  value={eMail}
-                />
-              </InputWrapper>
-            </PupilDetailsContainer>
-          </>
-        )}
-
-        <SkillsContainer>
           {renderSkillsSection(
             "NOVICE",
             noviceSkillsList,
@@ -316,202 +360,40 @@ const ReportCardPage: React.FC = () => {
             setAdvancedSkills,
             "advanced"
           )}
-        </SkillsContainer>
 
-        <ButtonContainer>
-          <Button type="submit">{id ? "Save Changes" : "Add Pupil"}</Button>
-          {id && (
-            <Button type="button" onClick={handleSendReport}>
-              Send Report via Email
-            </Button>
-          )}
-          {id && (
-            <Button
-              style={{ backgroundColor: "#830505" }}
-              type="button"
-              onClick={handleDelete}
-            >
-              Delete Pupil
-            </Button>
-          )}
-        </ButtonContainer>
-        {error && <Error>{error}</Error>}
-      </Form>
+          <ButtonContainer>
+            <Button type="submit">{id ? "Save Changes" : "Add Pupil"}</Button>
+            {id && (
+              <Button type="button" onClick={handleSendReport}>
+                Send Report via Email
+              </Button>
+            )}
+            {id && (
+              <Button
+                style={{ backgroundColor: "#830505" }}
+                type="button"
+                onClick={handleDelete}
+              >
+                Delete Pupil
+              </Button>
+            )}
+          </ButtonContainer>
+          {error && <Error>{error}</Error>}
+        </Form>
 
-      <ConfirmationDialog
-        open={dialogOpen}
-        title={dialogTitle}
-        description={dialogDescription}
-        onConfirm={() => {
-          if (dialogAction) dialogAction();
-        }}
-        onCancel={() => setDialogOpen(false)}
-        singleButton={singleButton} // Pass the new singleButton prop to the dialog
-      />
-    </Container>
+        <ConfirmationDialog
+          open={dialogOpen}
+          title={dialogTitle}
+          description={dialogDescription}
+          onConfirm={() => {
+            if (dialogAction) dialogAction();
+          }}
+          onCancel={() => setDialogOpen(false)}
+          singleButton={singleButton} // Pass the new singleButton prop to the dialog
+        />
+      </Container>
+    </>
   );
 };
 
 export default ReportCardPage;
-
-// Styles
-const Container = styled.div`
-  padding: 20px;
-  margin: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  max-width: 1500px;
-`;
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-`;
-
-const StudentName = styled.h3`
-  font-size: 24px;
-  color: #333;
-  font-family: "Open Sans", sans-serif;
-  margin-bottom: 10px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 5px;
-  display: block;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  margin: 5px 0;
-  background-color: #041d75;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-  border-radius: 6px;
-  font-size: 18px;
-  padding: 10px 20px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const ToggleButton = styled(Button)`
-  background-color: #6c757d;
-  width: 200px;
-  align-self: center;
-
-  &:hover {
-    background-color: #5a6268;
-  }
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  width: 60%;
-
-  font-size: 14px;
-  font-family: "Open Sans", sans-serif;
-`;
-
-const Error = styled.div`
-  color: red;
-  margin-top: 10px;
-`;
-
-const SkillsContainer = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  padding-left: 50px;
-  margin-top: 20px;
-  background-color: #f1f1f1;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const SkillDiv = styled.div`
-  width: 450px;
-
-  @media (max-width: 768px) {
-    width: auto;
-  }
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 20px;
-  color: #f1f1f1;
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-  background-color: #041d75;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: left;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SectionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  background-color: #041d75;
-  margin-bottom: 10px;
-`;
-
-const PupilDetailsContainer = styled.div`
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const InputWrapper = styled.div`
-  flex: 1;
-  min-width: 200px;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-
-  gap: 10px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const ToggleSectionIcon = styled.button`
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 18px;
-
-  &:hover {
-    color: #014083;
-  }
-`;

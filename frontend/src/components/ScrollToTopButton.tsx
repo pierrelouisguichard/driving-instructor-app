@@ -1,26 +1,30 @@
-//@ts-nocheck
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const ScrollButton = styled.button`
+const ScrollButton = styled.button<{ $show: boolean }>`
   position: fixed;
   width: 50px;
   height: 50px;
   bottom: 20px;
-  right: 40px;
-  padding-bottom: 7px;
-  background-color: #041d75;
+  right: 20px;
+  background-color: ${(props) => props.theme.colors.primary};
   color: #ffffff;
   font-size: 24px;
   font-weight: bold;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  display: ${({ show }: { show: boolean }) => (show ? "block" : "none")};
-  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: ${({ $show }) => ($show ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out; // Adjust the transition duration and easing as needed
 
   &:hover {
-    background-color: #0529aa;
+    background-color: white;
+    color: ${(props) => props.theme.colors.primary};
   }
 `;
 
@@ -50,8 +54,8 @@ const ScrollToTopButton: React.FC = () => {
   }, []);
 
   return (
-    <ScrollButton show={visible} onClick={scrollToTop}>
-      ↑
+    <ScrollButton $show={visible} onClick={scrollToTop}>
+      <FontAwesomeIcon icon={faArrowUp} />
     </ScrollButton>
   );
 };

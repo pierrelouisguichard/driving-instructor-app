@@ -9,31 +9,29 @@ import { useAuthContext } from "./hooks/useAuthContext";
 function App() {
   const { user } = useAuthContext();
   return (
-    <>
-      <Routes>
-        <Route
-          path="/"
-          element={user ? <PupilListPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/card"
-          element={user ? <ReportCardPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/card/:id"
-          element={user ? <ReportCardPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/login"
-          element={!user ? <LoginPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/signup"
-          element={!user ? <SignUpPage /> : <Navigate to="/" />}
-        />
-        <Route path="/test" element={<ProgressReportPage />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route
+        path="/"
+        element={user ? <PupilListPage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/card"
+        element={user ? <ReportCardPage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/card/:id"
+        element={user ? <ReportCardPage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/login"
+        element={!user ? <LoginPage /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/signup"
+        element={!user ? <SignUpPage /> : <Navigate to="/" />}
+      />
+      <Route path="/test" element={<ProgressReportPage />} />
+    </Routes>
   );
 }
 
