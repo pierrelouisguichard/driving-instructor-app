@@ -4,30 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { fetchAllPupils } from "../services/apiServices";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
-import {
-  faArrowRightFromBracket,
-  faUserPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  PupilButtonsContainer,
-  StyledBody,
-  StyledFaChevronRight,
-  StyledPupilButton,
-} from "../Styles/PupilListPage/Body.styled";
-import {
-  StyledHeader,
-  Logo,
-  StyledAddButton,
-  StyledContainer,
-  HeaderContainer,
-  IconContainer,
-  StyledFaSignOut,
-  StyledH1,
-  BoldText,
-  StyledText,
-} from "../Styles/PupilListPage/Header.styled";
-import logo from "../assets/Driving_School.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PupilListHeader from "../components/PupilListHeader"; // Import the new Header component
+import styled, { keyframes } from "styled-components";
+import { FaChevronRight } from "react-icons/fa";
 
 const PupilListPage: React.FC = () => {
   const [pupilsList, setPupilsList] = useState<PupilWithID[] | null>(null);
@@ -73,27 +52,13 @@ const PupilListPage: React.FC = () => {
 
   return (
     <>
-      <StyledHeader>
-        <HeaderContainer>
-          <Logo src={logo} alt="Driving School Logo" />
-          <StyledContainer>
-            <StyledH1>Welcome back!</StyledH1>
-            <StyledText>Logged in as: {user?.email}</StyledText>
-            <StyledText>
-              You have <BoldText>{pupilsList.length}</BoldText> pupils.
-            </StyledText>
-          </StyledContainer>
-          <IconContainer>
-            <StyledFaSignOut
-              icon={faArrowRightFromBracket}
-              onClick={handleLogOut}
-            />
-            <StyledAddButton onClick={handleNew}>
-              <FontAwesomeIcon icon={faUserPlus} />
-            </StyledAddButton>
-          </IconContainer>
-        </HeaderContainer>
-      </StyledHeader>
+      <PupilListHeader
+        user={user}
+        pupilsList={pupilsList}
+        handleNew={handleNew}
+        handleLogOut={handleLogOut}
+        handleNavigate={handleNavigate}
+      />
 
       <StyledBody>
         {pupilsList.length === 0 ? (
@@ -117,3 +82,66 @@ const PupilListPage: React.FC = () => {
 };
 
 export default PupilListPage;
+
+// body
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const StyledBody = styled.div`
+  padding: 20px;
+  background-color: ${(props) => props.theme.colors.background};
+  color: ${(props) => props.theme.colors.text};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: ${fadeIn} 1s ease-out;
+`;
+
+const PupilButtonsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: left;
+  width: 100%;
+  max-width: 1500px;
+`;
+
+const StyledPupilButton = styled.button`
+  background-color: ${(props) => props.theme.colors.buttonBackground};
+  color: ${(props) => props.theme.colors.secondaryText};
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 360px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.primary};
+    color: ${(props) => props.theme.colors.text};
+  }
+
+  @media (max-width: 800px) {
+    width: 100vw;
+    max-width: none;
+  }
+`;
+
+const StyledFaChevronRight = styled(FaChevronRight)`
+  font-size: 20px;
+`;
