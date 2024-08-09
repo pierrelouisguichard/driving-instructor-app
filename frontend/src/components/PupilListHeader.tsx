@@ -1,9 +1,58 @@
+import React from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRightFromBracket,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import logo from "../assets/Driving_School.png";
+import { PupilWithID } from "../interface/Interfaces";
 
-export const StyledHeader = styled.header`
+interface HeaderProps {
+  user: { email: string } | null;
+  pupilsList: PupilWithID[] | null;
+  handleNew: () => void;
+  handleLogOut: () => void;
+  handleNavigate: (pupilId: string) => void;
+}
+
+const PupilListHeader: React.FC<HeaderProps> = ({
+  user,
+  pupilsList,
+  handleNew,
+  handleLogOut,
+}) => {
+  return (
+    <StyledHeader>
+      <HeaderContainer>
+        <Logo src={logo} alt="Driving School Logo" />
+        <StyledContainer>
+          <StyledH1>Welcome back!</StyledH1>
+          <StyledText>Logged in as: {user?.email}</StyledText>
+          <StyledText>
+            You have <BoldText>{pupilsList?.length || 0}</BoldText> pupils.
+          </StyledText>
+        </StyledContainer>
+        <IconContainer>
+          <StyledFaSignOut
+            icon={faArrowRightFromBracket}
+            onClick={handleLogOut}
+          />
+          <StyledAddButton onClick={handleNew}>
+            <FontAwesomeIcon icon={faUserPlus} />
+          </StyledAddButton>
+        </IconContainer>
+      </HeaderContainer>
+    </StyledHeader>
+  );
+};
+
+export default PupilListHeader;
+
+// styled components
+const StyledHeader = styled.header`
   padding: 20px;
-  height: 200px;
+  height: 170px;
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text};
   display: flex;
@@ -18,7 +67,7 @@ export const StyledHeader = styled.header`
   }
 `;
 
-export const HeaderContainer = styled.div`
+const HeaderContainer = styled.div`
   width: 1500px;
   display: flex;
   align-items: center;
@@ -27,26 +76,26 @@ export const HeaderContainer = styled.div`
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
   }
 `;
 
-export const Logo = styled.img`
+const Logo = styled.img`
   width: 160px;
   height: auto;
 `;
 
-export const IconContainer = styled.div`
+const IconContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   @media (max-width: 800px) {
     flex-direction: row;
-    gap: 130px;
+    gap: 80px;
   }
 `;
 
-export const StyledAddButton = styled.button`
+const StyledAddButton = styled.button`
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text};
   border: none;
@@ -62,15 +111,19 @@ export const StyledAddButton = styled.button`
   }
 `;
 
-export const StyledContainer = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 1rem;
-  gap: 0.5rem; /* Add spacing between elements */
+  padding-left: 50px;
+  margin-right: auto;
+  @media (max-width: 800px) {
+    margin: auto;
+  }
 `;
 
-export const StyledH1 = styled.h1`
+const StyledH1 = styled.h1`
   font-size: 2rem;
   margin: 0;
   color: ${(props) => props.theme.colors.text};
@@ -79,7 +132,7 @@ export const StyledH1 = styled.h1`
   }
 `;
 
-export const StyledText = styled.p`
+const StyledText = styled.p`
   font-size: 1.2rem;
   margin: 0;
   color: ${(props) => props.theme.colors.text};
@@ -88,11 +141,11 @@ export const StyledText = styled.p`
   }
 `;
 
-export const BoldText = styled.span`
+const BoldText = styled.span`
   font-weight: bold;
 `;
 
-export const StyledFaSignOut = styled(FontAwesomeIcon)`
+const StyledFaSignOut = styled(FontAwesomeIcon)`
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text};
   border: none;

@@ -1,5 +1,38 @@
 import { Pupil } from "../interface/Interfaces";
 
+const stages = [
+  "Introduced",
+  "Talk Through",
+  "Prompted",
+  "Rarely Prompted",
+  "Independent",
+];
+
+// Helper function to get progress percentage based on the stage
+const getProgressPercentage = (stage: string) => {
+  const stageIndex = stages.indexOf(stage);
+  if (stageIndex === -1) return 0;
+  return (stageIndex / (stages.length - 1)) * 100;
+};
+
+// Helper function to get color based on the stage
+const getProgressColor = (stage: string) => {
+  switch (stage) {
+    case "Introduced":
+      return "#213260"; // Dark Blue
+    case "Talk Through":
+      return "#213260"; // Dark Blue
+    case "Prompted":
+      return "#5571bf"; // Medium Blue
+    case "Rarely Prompted":
+      return "#79b2f3"; // Light Blue
+    case "Independent":
+      return "#97e7ff"; // Very Light Blue
+    default:
+      return "#D3D3D3"; // Light Gray (Default color)
+  }
+};
+
 // Formats a pupil's progress report into an HTML string suitable for email.
 const formatProgressReport = ({
   firstName,
@@ -8,19 +41,28 @@ const formatProgressReport = ({
   intermediateSkillsList,
   advancedSkillsList,
 }: Pupil): string => {
-  // Helper function to generate HTML for skill lists
+  // Helper function to generate HTML for skill lists with progress bars
   const generateSkillListHtml = (
     skillsList: { variable: string; stage: string }[]
   ) =>
     skillsList
-      .map(
-        (record, index) => `
-          <li key="${index}">
-            <span class="variable">${record.variable}</span>: 
-            <span class="stage">${record.stage}</span>
-          </li>
-        `
-      )
+      .map((record, index) => {
+        const progressPercentage = getProgressPercentage(record.stage);
+        const progressColor = getProgressColor(record.stage);
+        return `
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                <div>
+                  <strong>${record.variable}</strong><br>
+                  <div style="background: #eee; border-radius: 4px; overflow: hidden; height: 10px; margin-bottom: 5px;">
+                    <div style="width: ${progressPercentage}%; background-color: ${progressColor}; height: 100%; border-radius: 4px;"></div>
+                  </div>
+                  <span style="color: #666; font-size: 14px;">${record.stage}</span>
+                </div>
+              </td>
+            </tr>
+          `;
+      })
       .join("");
 
   return `
@@ -34,46 +76,62 @@ const formatProgressReport = ({
             background-color: #f4f4f4;
           }
           .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
             padding: 20px;
             background: #ffffff;
-            border: 1px solid #dddddd;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          }
+          .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 150px; /* Adjust size as needed */
           }
           h1 {
-            color: #333;
-            font-size: 24px;
-            border-bottom: 2px solid #333;
+            color: #213260;
+            font-size: 26px;
+            border-bottom: 2px solid #213260;
             padding-bottom: 10px;
             margin-bottom: 20px;
+            text-align: center;
           }
           .skill-category {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
             margin-bottom: 20px;
           }
           .skill-category > div {
-            flex: 1;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
           }
           h2 {
-            color: #555;
-            font-size: 20px;
+            color: #213260;
+            font-size: 22px;
+            margin-bottom: 15px;
+          }
+          .skill {
             margin-bottom: 15px;
           }
           .variable {
             font-weight: bold;
-            color: #333;
+            color: #213260;
+            display: block;
+            margin-bottom: 5px;
+          }
+          .progress-bar {
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            height: 10px;
+            margin-bottom: 5px;
+          }
+          .progress {
+            height: 100%;
+            border-radius: 4px;
           }
           .stage {
             color: #666;
+            font-size: 14px;
           }
           ul {
             list-style-type: none;
@@ -81,34 +139,35 @@ const formatProgressReport = ({
             margin: 0;
           }
           li {
-            margin-bottom: 10px;
             padding: 10px;
             background: #ffffff;
-            border-left: 4px solid #007bff;
+            border-left: 4px solid #213260;
+            border-radius: 4px;
           }
         </style>
       </head>
       <body>
         <div class="container">
+          <img class="logo" src="https://chelseadrivingschool.co.uk/wp-content/uploads/2019/04/chelsea-driving-school-240.jpg" alt="Driving School Logo" />
           <h1>${firstName} ${lastName}'s Progress Report</h1>
           <div class="skill-category">
             <div>
               <h2>Novice Skills</h2>
-              <ul>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 ${generateSkillListHtml(noviceSkillsList)}
-              </ul>
+              </table>
             </div>
             <div>
               <h2>Intermediate Skills</h2>
-              <ul>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 ${generateSkillListHtml(intermediateSkillsList)}
-              </ul>
+              </table>
             </div>
             <div>
               <h2>Advanced Skills</h2>
-              <ul>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 ${generateSkillListHtml(advancedSkillsList)}
-              </ul>
+              </table>
             </div>
           </div>
         </div>

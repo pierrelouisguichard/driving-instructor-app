@@ -1,48 +1,3 @@
-// import React from "react";
-// import {
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   DialogContentText,
-//   DialogTitle,
-//   Button,
-// } from "@mui/material";
-
-// interface ConfirmationDialogProps {
-//   open: boolean;
-//   title: string;
-//   description: string;
-//   onConfirm: () => void;
-//   onCancel: () => void;
-// }
-
-// const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-//   open,
-//   title,
-//   description,
-//   onConfirm,
-//   onCancel,
-// }) => {
-//   return (
-//     <Dialog open={open} onClose={onCancel}>
-//       <DialogTitle>{title}</DialogTitle>
-//       <DialogContent>
-//         <DialogContentText>{description}</DialogContentText>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button onClick={onCancel} color="primary">
-//           Cancel
-//         </Button>
-//         <Button onClick={onConfirm} color="primary" autoFocus>
-//           Confirm
-//         </Button>
-//       </DialogActions>
-//     </Dialog>
-//   );
-// };
-
-// export default ConfirmationDialog;
-
 import React from "react";
 import styled from "styled-components";
 
@@ -70,18 +25,19 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       <DialogContent>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription
-          dangerouslySetInnerHTML={{ __html: description }}></DialogDescription>
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></DialogDescription>
         <DialogButtonContainer>
           {singleButton ? (
-            <DialogButton onClick={onCancel} color="#4CAF50">
+            <DialogButton onClick={onCancel} color="#213260">
               Okay
             </DialogButton>
           ) : (
             <>
-              <DialogButton onClick={onCancel} color="#F44336">
+              <DialogButton onClick={onCancel} color="#830505">
                 Cancel
               </DialogButton>
-              <DialogButton onClick={onConfirm} color="#4CAF50">
+              <DialogButton onClick={onConfirm} color="#213260">
                 Confirm
               </DialogButton>
             </>

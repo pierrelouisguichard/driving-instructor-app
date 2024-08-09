@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import formatProgressReport from "../utils/formatProgressReport";
-import {
-  defaultAdvancedSkillsList,
-  defaultIntermediateSkillsList,
-  defaultNoviceSkillsList,
-} from "../models/drivingSkillsList";
+import { Pupil } from "../interface/Interfaces";
 
-// This page is for testing and previewing the email report format. (/test)
+// This page is to preview the email report format. (/report)
 const ProgressReportPage: React.FC = () => {
-  const pupil = {
-    firstName: "John",
-    lastName: "Doe",
-    eMail: "johndoe@gmail.com",
-    noviceSkillsList: defaultNoviceSkillsList,
-    intermediateSkillsList: defaultIntermediateSkillsList,
-    advancedSkillsList: defaultAdvancedSkillsList,
-  };
+  const location = useLocation();
+  const pupil = location.state?.pupil as Pupil;
 
   const [formattedReport, setFormattedReport] = useState<string>("");
 
   useEffect(() => {
-    const report = formatProgressReport(pupil);
-    setFormattedReport(report);
+    if (pupil) {
+      const report = formatProgressReport(pupil);
+      setFormattedReport(report);
+    }
   }, [pupil]);
 
   return (
