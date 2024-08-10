@@ -1,10 +1,9 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import ReportCardPage from "./pages/ReportCardPage";
 import PupilListPage from "./pages/PupilListPage";
-import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
 import { useAuthContext } from "./hooks/useAuthContext";
 import ProgressReportPage from "./pages/ProgressReportPage";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   const { user } = useAuthContext();
@@ -24,11 +23,11 @@ function App() {
       />
       <Route
         path="/login"
-        element={!user ? <LoginPage /> : <Navigate to="/" />}
+        element={!user ? <AuthPage mode="login" /> : <Navigate to="/" />}
       />
       <Route
         path="/signup"
-        element={!user ? <SignUpPage /> : <Navigate to="/" />}
+        element={!user ? <AuthPage mode="signup" /> : <Navigate to="/" />}
       />
       <Route path="/report" element={<ProgressReportPage />} />
     </Routes>

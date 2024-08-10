@@ -59,7 +59,7 @@ const StyledHeader = styled.header`
   justify-content: center;
   @media (max-width: 800px) {
     padding: 20px;
-    height: 380px;
+    height: 300px;
     border-radius: 0 0 30px 30px;
     flex-direction: column;
     align-items: center;

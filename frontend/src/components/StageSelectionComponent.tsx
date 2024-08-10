@@ -84,14 +84,14 @@ const ContentWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     flex-direction: column;
   }
 `;
 
 const ProgressWrapper = styled.div`
   display: none;
-  @media (min-width: 601px) {
+  @media (min-width: 800px) {
     display: block;
     width: 100%;
     margin-right: 15px;
@@ -101,7 +101,7 @@ const ProgressWrapper = styled.div`
 const SelectWrapper = styled.div`
   position: relative;
   width: fit-content;
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     width: 100%;
   }
 `;
