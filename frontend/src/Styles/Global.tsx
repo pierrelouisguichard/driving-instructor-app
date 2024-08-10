@@ -5,32 +5,31 @@ const GlobalStyles = createGlobalStyle`
   *, *::before, *::after {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
   }
 
   body {
-    font-family: 'Roboto', sans-serif; /* Default font family */
+    font-family: 'Roboto', sans-serif; 
     line-height: 1.6;
-    color: #333; /* Default text color */
-    background-color: #f4f4f4; /* Default background color */
-    -webkit-font-smoothing: antialiased; /* Smooths font rendering on webkit browsers */
-    -moz-osx-font-smoothing: grayscale; /* Smooths font rendering on Firefox */
+    color: #333; 
+    background-color: #f4f4f4; 
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale; 
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Open Sans', sans-serif; /* Font for headers */
-    color: #222; /* Header color */
+    font-family: 'Open Sans', sans-serif; 
+    color: #222;
   }
 
   p {
-    margin-bottom: 1rem; /* Space between paragraphs */
+    margin-bottom: 1rem; 
   }
 
   a {
-    color: #007bff; /* Link color */
-    text-decoration: none; /* Remove underline */
+    color: #007bff; 
+    text-decoration: none; 
     &:hover {
-      text-decoration: underline; /* Underline on hover */
+      text-decoration: underline; 
     }
   }
 

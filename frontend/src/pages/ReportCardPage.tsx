@@ -319,6 +319,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 // Bottom Buttons
@@ -328,7 +330,7 @@ const ButtonContainer = styled.div`
   gap: 10px;
   flex-wrap: wrap;
 
-  @media (max-width: 768px) {
+  @media (max-width: 800px) {
     flex-direction: column;
   }
 `;

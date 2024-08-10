@@ -11,5 +11,4 @@ export const theme = {
     medium: "16px",
     large: "32px",
   },
-  // Add more theme properties as needed
 };
