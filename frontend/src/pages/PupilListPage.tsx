@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchAllPupils } from "../services/apiServices";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
-import PupilListHeader from "../components/PupilListHeader"; // Import the new Header component
+import PupilListHeader from "../components/PupilListHeader";
 import styled, { keyframes } from "styled-components";
 import { FaChevronRight } from "react-icons/fa";
 

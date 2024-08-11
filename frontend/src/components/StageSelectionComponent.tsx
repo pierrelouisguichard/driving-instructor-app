@@ -45,17 +45,17 @@ export default StageSelectionComponent;
 const getStageColor = (stage: string): string => {
   switch (stage) {
     case "Introduced":
-      return "#5d5d5d"; // Dark Blue
+      return "#3d3d3d";
     case "Talk Through":
-      return "#213260"; // Dark Blue
+      return "#213260";
     case "Prompted":
-      return "#5571bf"; // Medium Blue
+      return "#3d4f83";
     case "Rarely Prompted":
-      return "#79b2f3"; // Light Blue
+      return "#6474a5";
     case "Independent":
-      return "#97e7ff"; // Very Light Blue
+      return "#95a5d0";
     default:
-      return "#D3D3D3"; // Light Gray (Default color)
+      return "#D3D3D3";
   }
 };
 
