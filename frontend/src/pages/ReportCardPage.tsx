@@ -18,7 +18,6 @@ import PupilDetailsForm from "../components/PupilDetailsForm";
 import SkillsSection from "../components/SkillsSection";
 import ReportCardHeader from "../components/ReportCardHeader";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useLogout } from "../hooks/useLogout";
 import styled, { keyframes } from "styled-components";
 
 /*
@@ -53,7 +52,6 @@ const ReportCardPage: React.FC = () => {
   const [dialogDescription, setDialogDescription] = useState("");
   const [dialogAction, setDialogAction] = useState<(() => void) | null>(null);
   const [singleButton, setSingleButton] = useState(false);
-  const { logout } = useLogout();
 
   useEffect(() => {
     if (id) {
@@ -309,7 +307,7 @@ const fadeIn = keyframes`
 `;
 
 const Container = styled.div`
-  padding-top: 20px;
+  padding: 20px;
   margin: auto;
   max-width: 1500px;
   animation: ${fadeIn} 0.5s ease-in-out;
@@ -319,8 +317,6 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
 `;
 
 // Bottom Buttons

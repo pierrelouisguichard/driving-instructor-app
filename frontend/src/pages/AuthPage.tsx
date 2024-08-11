@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useLogin } from "../hooks/useLogin";
 import { useSignUp } from "../hooks/useSignUp";
 import logo from "../assets/Driving_School.png";
@@ -89,17 +89,26 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode }) => {
 export default AuthPage;
 
 // Syles
-const blue = (mode: "login" | "signup"): string => {
+const white = (mode: "login" | "signup"): string => {
   return mode === "login" ? "#213260" : "white";
 };
 
-const white = (mode: "login" | "signup"): string => {
+const blue = (mode: "login" | "signup"): string => {
   return mode === "login" ? "white" : "#213260";
 };
 
 const inputColour = (mode: "login" | "signup"): string => {
-  return mode === "login" ? "white" : "#eceff7";
+  return mode === "login" ? "#eceff7" : "white";
 };
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 // Entire Page
 const PageContainer = styled.div<AuthPageProps>`
@@ -122,6 +131,7 @@ const ContentContainer = styled.div`
   max-width: 1000px;
   min-height: 700px;
   display: flex;
+  animation: ${fadeIn} 1s ease-in-out;
 
   @media (max-width: 800px) {
     flex-direction: column;
@@ -188,8 +198,6 @@ const LeftButton = styled.button<AuthPageProps>`
   padding: 0.75rem;
   margin-top: 2rem;
   width: 300px;
-  font-weight: bold;
-  font-family: "Open Sans", sans-serif;
   align-self: center;
   background-color: ${(props) => white(props.mode)};
   color: ${(props) => blue(props.mode)};

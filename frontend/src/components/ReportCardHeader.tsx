@@ -9,11 +9,11 @@ interface Props {
 }
 
 const ReportCardHeader: React.FC<Props> = ({ title }) => {
-  const navigate = useNavigate(); // Call useNavigate inside the component
+  const navigate = useNavigate();
 
   const navigateHome = () => {
     console.log("Logo clicked");
-    navigate("/"); // Use navigate function to go to the homepage
+    navigate("/");
   };
 
   return (
@@ -30,14 +30,12 @@ export default ReportCardHeader;
 
 // Styles
 const StyledHeader = styled.header`
-  padding: 20px;
   height: 170px;
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text};
   display: flex;
   justify-content: center;
   @media (max-width: 800px) {
-    padding: 20px;
     height: 250px;
     border-radius: 0 0 30px 30px;
     flex-direction: column;
@@ -48,10 +46,11 @@ const StyledHeader = styled.header`
 
 const HeaderContainer = styled.div`
   width: 1500px;
+  padding: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to the left */
-  gap: 50px; /* Optional: Adds space between logo and title */
+  justify-content: flex-start;
+  gap: 50px;
   @media (max-width: 800px) {
     width: 100%;
     flex-direction: column;

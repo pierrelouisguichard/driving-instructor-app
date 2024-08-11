@@ -56,7 +56,6 @@ export const ToggleButton = styled.button`
   padding: 20px;
   border-radius: 5px;
   cursor: pointer;
-  font-family: "Open Sans", sans-serif;
   font-weight: bold;
   font-size: 18px;
   text-align: left;
