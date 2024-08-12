@@ -19,6 +19,15 @@ const PupilListPage: React.FC = () => {
   const { logout } = useLogout();
   const { user } = useAuthContext();
 
+  // all changes
+  //filteredPupilsList: To store the filtered list of pupils based on the search term.
+  //searchTerm: To store the current search input.
+  //isSearchVisible: To toggle the visibility of the search input.
+  //toggleSearch: To show/hide the search input.
+  //added a new useEffect hook that filters the pupils list whenever the searchTerm changes.
+  //created a new SearchContainer component that includes a search icon and an input field.
+  //updated the rendering logic to use filteredPupilsList instead of pupilsList when displaying pupils.
+
   useEffect(() => {
     const loadPupils = async () => {
       if (user) {
