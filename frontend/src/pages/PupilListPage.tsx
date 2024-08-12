@@ -10,22 +10,23 @@ import { FaChevronRight, FaSearch } from "react-icons/fa";
 
 const PupilListPage: React.FC = () => {
   const [pupilsList, setPupilsList] = useState<PupilWithID[] | null>(null);
-  const [filteredPupilsList, setFilteredPupilsList] = useState<PupilWithID[] | null>(null);
+  const [filteredPupilsList, setFilteredPupilsList] = useState<
+    PupilWithID[] | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
   const navigate = useNavigate();
   const { logout } = useLogout();
   const { user } = useAuthContext();
-  
-// all changes
-//filteredPupilsList: To store the filtered list of pupils based on the search term.
-//searchTerm: To store the current search input.
-//isSearchVisible: To toggle the visibility of the search input.
-//toggleSearch: To show/hide the search input.
-//added a new useEffect hook that filters the pupils list whenever the searchTerm changes.
-//created a new SearchContainer component that includes a search icon and an input field.
-//updated the rendering logic to use filteredPupilsList instead of pupilsList when displaying pupils.
+
+  // all changes
+  //filteredPupilsList: To store the filtered list of pupils based on the search term.
+  //searchTerm: To store the current search input.
+  //isSearchVisible: To toggle the visibility of the search input.
+  //toggleSearch: To show/hide the search input.
+  //added a new useEffect hook that filters the pupils list whenever the searchTerm changes.
+  //created a new SearchContainer component that includes a search icon and an input field.
+  //updated the rendering logic to use filteredPupilsList instead of pupilsList when displaying pupils.
 
   useEffect(() => {
     const loadPupils = async () => {
@@ -45,9 +46,11 @@ const PupilListPage: React.FC = () => {
   useEffect(() => {
     if (pupilsList) {
       const filtered = pupilsList.filter((pupil) =>
-        `${pupil.firstName} ${pupil.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+        `${pupil.firstName} ${pupil.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
-      setFilteredPupilsList(filtered); //store the filtered list of pupils based on the search term.
+      setFilteredPupilsList(filtered); // Store the filtered list of pupils based on the search term.
     }
   }, [searchTerm, pupilsList]);
 
@@ -63,13 +66,6 @@ const PupilListPage: React.FC = () => {
     logout();
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-    if (isSearchVisible) {
-      setSearchTerm("");
-    }
-  };
-
   if (error) {
     return <div>{error}</div>;
   }
@@ -77,6 +73,7 @@ const PupilListPage: React.FC = () => {
   if (pupilsList === null) {
     return <div>Loading...</div>;
   }
+
   return (
     <>
       <PupilListHeader
@@ -87,18 +84,16 @@ const PupilListPage: React.FC = () => {
         handleNavigate={handleNavigate}
       />
       <StyledBody>
-        <SearchContainer> 
-          <SearchIcon onClick={toggleSearch}>
+        <SearchContainer>
+          <SearchIcon>
             <FaSearch />
           </SearchIcon>
-          {isSearchVisible && (
-            <SearchInput
-              type="text"
-              placeholder="Search pupils..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          )}
+          <SearchInput
+            type="text"
+            placeholder="Search pupils..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </SearchContainer>
         {filteredPupilsList && filteredPupilsList.length === 0 ? (
           <NoPupilsMessage>No pupils found.</NoPupilsMessage>
@@ -123,7 +118,6 @@ const PupilListPage: React.FC = () => {
 
 export default PupilListPage;
 
-
 // body
 const fadeIn = keyframes`
   from {
@@ -144,7 +138,6 @@ const StyledBody = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  animation: ${fadeIn} 1s ease-out;
 `;
 
 const PupilButtonsContainer = styled.div`
@@ -154,6 +147,7 @@ const PupilButtonsContainer = styled.div`
   justify-content: left;
   width: 100%;
   max-width: 1500px;
+  animation: ${fadeIn} 1s ease-out;
 `;
 
 const StyledPupilButton = styled.button`
@@ -186,28 +180,27 @@ const StyledPupilButton = styled.button`
 const StyledFaChevronRight = styled(FaChevronRight)`
   font-size: 20px;
 `;
+
+// search bar+icon styling
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  border-radius: 20px;
+  background-color: white;
   width: 100%;
   max-width: 1500px;
+  border: none;
 `;
 
-//search bar+icon styling
 const SearchIcon = styled.div`
-  cursor: pointer;
   border: none;
-  font-size: 1.5rem;
+  padding-top: 5px;
+  padding-left: 15px;
+  font-size: 1.2rem;
   margin-right: 10px;
   color: ${(props) => props.theme.colors.primary};
-  &:hover {
-    scale: 1.4 
-  }
-
   @media (max-width: 800px) {
     font-size: 1.2rem;
-    &:hover { scale: none }
   }
 `;
 
@@ -218,13 +211,9 @@ const NoPupilsMessage = styled.div`
 
 const SearchInput = styled.input`
   flex-grow: 1;
+  border-radius: 20px;
   padding: 10px;
   font-size: 1rem;
-  border: 1px solid ${(props) => props.theme.colors.primary};
-  border-radius: 5px;
-  outline: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.primary};
-  background-color: ${(props) => props.theme.colors.background};
-  transition: border 0.3s ease;
-  
+  border: none;
+  background-color: transparent;
 `;
