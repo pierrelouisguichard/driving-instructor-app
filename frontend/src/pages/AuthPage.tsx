@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { useLogin } from "../hooks/useLogin";
 import { useSignUp } from "../hooks/useSignUp";
@@ -13,19 +13,45 @@ type AuthPageProps = {
 const AuthPage: React.FC<AuthPageProps> = ({ mode }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [invitationCode, setInvitationCode] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const navigate = useNavigate();
+  const location = useLocation(); // Hook to access URL location
 
   const { login, error: loginError, isLoading: loginLoading } = useLogin();
   const { signUp, error: signUpError, isLoading: signUpLoading } = useSignUp();
 
   const isLoginMode = mode === "login";
+
+  // Extract invitation code from the URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const code = params.get("invitationCode");
+    if (code) {
+      setInvitationCode(code);
+    }
+  }, [location.search]);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const validationError = validateForm();
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+    setErrorMessage(""); // Clear previous errors
     if (isLoginMode) {
       await login(email, password);
     } else {
-      await signUp(email, password);
+      await signUp(email, password, invitationCode);
     }
+  };
+
+  const validateForm = (): string => {
+    if (!email || !password) return "Email and Password are required.";
+    if (!isLoginMode && !invitationCode) return "Invitation Code is required.";
+    return "";
   };
 
   return (
@@ -47,14 +73,24 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+
               <Input
                 mode={mode}
-                type="password"
+                type={"password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              {!isLoginMode && (
+                <Input
+                  mode={mode}
+                  type="text"
+                  placeholder="Invitation Code"
+                  value={invitationCode}
+                  onChange={(e) => setInvitationCode(e.target.value)}
+                />
+              )}
               <LeftButton
                 mode={mode}
                 disabled={isLoginMode ? loginLoading : signUpLoading}
@@ -63,6 +99,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode }) => {
                 {isLoginMode ? "Login" : "Sign Up"}
               </LeftButton>
             </Form>
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             {(isLoginMode ? loginError : signUpError) && (
               <ErrorMessage>
                 {isLoginMode ? loginError : signUpError}
@@ -186,7 +223,7 @@ const Form = styled.form`
 
 const Input = styled.input<AuthPageProps>`
   margin-bottom: 1rem;
-  color: ${(props) => white(props.mode)};
+  color: ${(props) => props.theme.colors.primary};
   padding: 0.8rem;
   font-size: 1rem;
   border-radius: 5px;

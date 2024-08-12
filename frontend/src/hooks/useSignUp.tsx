@@ -2,32 +2,38 @@ import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
 export const useSignUp = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { dispatch } = useAuthContext();
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    invitationCode: string
+  ) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/user/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const json = await response.json();
+    try {
+      console.log({ email, password, invitationCode }); // Log data being sent
 
-    if (!response.ok) {
-      setIsLoading(false);
-      setError(json.error);
-    }
-    if (response.ok) {
-      // save the user to local storage
-      localStorage.setItem("user", JSON.stringify(json));
+      const response = await fetch("http://localhost:4000/api/user/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, invitationCode }),
+      });
 
-      // update the auth context
-      dispatch({ type: "LOGIN", payload: json });
+      const json = await response.json();
 
+      if (!response.ok) {
+        setError(json.error || "Registration failed");
+      } else {
+        localStorage.setItem("user", JSON.stringify(json));
+        dispatch({ type: "LOGIN", payload: json });
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };

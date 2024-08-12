@@ -14,11 +14,17 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  isAdmin: { type: Boolean, default: false },
+});
+
+const invitationSchema = new Schema({
+  code: { type: String, required: true, unique: true },
+  used: { type: Boolean, default: false },
 });
 
 // static signup method, hash password
-userSchema.statics.signup = async function (email, password) {
-  if (!email || !password) {
+userSchema.statics.signup = async function (email, password, invitationCode) {
+  if (!email || !password || !invitationCode) {
     throw Error("All fields must be filled");
   }
   if (!validator.isEmail(email)) {
@@ -28,8 +34,14 @@ userSchema.statics.signup = async function (email, password) {
     throw Error("Password not strong enough");
   }
 
-  const exists = await this.findOne({ email });
+  // Check if the invitation code is valid
+  const invitation = await Invitation.findOne({ code: invitationCode });
+  if (!invitation || invitation.used) {
+    throw new Error("Invalid or used invitation code");
+  }
 
+  // Check if the email is already in use
+  const exists = await this.findOne({ email });
   if (exists) {
     throw new Error("Email already in use");
   }
@@ -40,9 +52,12 @@ userSchema.statics.signup = async function (email, password) {
 
     const user = await this.create({ email, password: hash });
 
+    // Delete invitation after use.
+    await Invitation.findOneAndDelete({ code: invitationCode });
+
     return user;
   } catch (error) {
-    console.error("Error hashing password:", error);
+    console.error("Error hashing password or creating user:", error);
     throw new Error("Failed to create user");
   }
 };
@@ -67,4 +82,7 @@ userSchema.statics.login = async function (email, password) {
   return user;
 };
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+const Invitation = mongoose.model("Invitation", invitationSchema);
+
+module.exports = { User, Invitation };

@@ -7,6 +7,7 @@ const {
   deletePupil,
   updatePupil,
   sendReport,
+  sendInvitation,
 } = require("../controllers/pupilController");
 const requireAuth = require("../middleware/requireAuth");
 

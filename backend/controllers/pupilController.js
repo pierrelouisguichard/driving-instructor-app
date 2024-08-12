@@ -7,13 +7,17 @@ const express = require("express");
 const router = express.Router();
 
 const getAllPupils = async (req, res) => {
+  if (!req.user) {
+    console.error("Not logged in");
+    return;
+  }
   const user_id = req.user._id;
   try {
     const pupils = await Pupil.find({ user_id }).sort({ createdAt: -1 });
 
     res.status(200).json(pupils);
   } catch (error) {
-    console.error("Errorr fetching pupils:", error);
+    console.error("Error fetching pupils:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -105,7 +109,7 @@ const updatePupil = async (req, res) => {
 };
 
 const transporter = nodemailer.createTransport({
-  service: "hotmail",
+  service: "gmail",
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -121,7 +125,7 @@ const sendReport = async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: "pierrelguichard@hotmail.com",
+      from: "pierrelguichard@gmail.com",
       to,
       subject,
       html,
