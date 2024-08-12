@@ -19,17 +19,17 @@ const getProgressPercentage = (stage: string) => {
 const getProgressColor = (stage: string) => {
   switch (stage) {
     case "Introduced":
-      return "#213260"; // Dark Blue
+      return "#3d3d3d";
     case "Talk Through":
-      return "#213260"; // Dark Blue
+      return "#213260";
     case "Prompted":
-      return "#5571bf"; // Medium Blue
+      return "#3d4f83";
     case "Rarely Prompted":
-      return "#79b2f3"; // Light Blue
+      return "#6474a5";
     case "Independent":
-      return "#97e7ff"; // Very Light Blue
+      return "#95a5d0";
     default:
-      return "#D3D3D3"; // Light Gray (Default color)
+      return "#D3D3D3";
   }
 };
 
@@ -46,7 +46,7 @@ const formatProgressReport = ({
     skillsList: { variable: string; stage: string }[]
   ) =>
     skillsList
-      .map((record, index) => {
+      .map((record) => {
         const progressPercentage = getProgressPercentage(record.stage);
         const progressColor = getProgressColor(record.stage);
         return `

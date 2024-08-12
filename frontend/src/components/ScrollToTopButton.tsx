@@ -20,7 +20,7 @@ const ScrollButton = styled.button<{ $show: boolean }>`
   align-items: center;
   justify-content: center;
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transition: opacity 0.3s ease-in-out; // Adjust the transition duration and easing as needed
+  transition: opacity 0.3s ease-in-out;
 
   &:hover {
     background-color: white;
