@@ -35,7 +35,7 @@ const NotFoundContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #0a192f; /* deep navy */
+  background-color: #0a192f;
   color: white;
   text-align: center;
   animation: ${fadeIn} 1s ease-out;
