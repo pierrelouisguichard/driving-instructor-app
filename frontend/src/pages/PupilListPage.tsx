@@ -36,6 +36,7 @@ const PupilListPage: React.FC = () => {
           setPupilsList(data);
           setFilteredPupilsList(data);
         } catch (error) {
+          localStorage.clear();
           setError("Failed to fetch pupils. Please try again later.");
         }
       }

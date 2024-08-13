@@ -163,14 +163,16 @@ const AdminDashboard: React.FC = () => {
         ) : (
           <UserList>
             {registeredUsers.length > 0 ? (
-              registeredUsers.map((user) => (
-                <UserItem key={user._id}>
-                  {user.email}
-                  <StyledButton onClick={() => deleteUser(user._id, user)}>
-                    <FaTrashCan />
-                  </StyledButton>
-                </UserItem>
-              ))
+              registeredUsers
+                .filter((user) => !user.isAdmin)
+                .map((user) => (
+                  <UserItem key={user._id}>
+                    {user.email}
+                    <StyledButton onClick={() => deleteUser(user._id, user)}>
+                      <FaTrashCan />
+                    </StyledButton>
+                  </UserItem>
+                ))
             ) : (
               <p>No registered users found.</p>
             )}
