@@ -28,7 +28,7 @@ const PupilListHeader: React.FC<HeaderProps> = ({
         <Logo src={logo} alt="Driving School Logo" />
         <StyledContainer>
           <StyledH1>Welcome back!</StyledH1>
-          <StyledText>Logged in as: {user?.email}</StyledText>
+          <StyledText>User: {user?.email}</StyledText>
           <StyledText>
             You have <BoldText>{pupilsList?.length || 0}</BoldText> pupils.
           </StyledText>
