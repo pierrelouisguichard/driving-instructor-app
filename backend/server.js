@@ -32,12 +32,12 @@ app.use((req, res, next) => {
 app.use("/api/pupils", pupilRoutes);
 app.use("/api/user", userRoutes);
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "dist"))); // Serve static files from the 'dist' folder
+// Serve static files from the React app located in the frontend/dist folder
+app.use(express.static(path.join(__dirname, "../frontend/dist"))); // Update the path to point to the correct dist directory
 
 // Catch-all route for serving the React app for all other requests
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html")); // Adjust the path to your build directory
+  res.sendFile(path.join(__dirname, "../frontend/dist", "index.html")); // Update path here too
 });
 
 // Connect to MongoDB
