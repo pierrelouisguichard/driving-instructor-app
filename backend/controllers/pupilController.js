@@ -41,22 +41,9 @@ const getPupil = async (req, res) => {
 const createPupil = async (req, res) => {
   try {
     const user_id = req.user._id;
-    const {
-      firstName,
-      lastName,
-      eMail,
-      noviceSkillsList,
-      intermediateSkillsList,
-      advancedSkillsList,
-    } = req.body;
     const pupil = new Pupil({
-      firstName,
-      lastName,
-      eMail,
-      noviceSkillsList,
-      intermediateSkillsList,
-      advancedSkillsList,
-      user_id,
+      ...req.body, // Pass the entire request body
+      user_id, // Add user_id separately
     });
     await pupil.save();
     res.status(201).json(pupil);

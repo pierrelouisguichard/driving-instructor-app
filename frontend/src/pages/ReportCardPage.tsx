@@ -33,6 +33,13 @@ const ReportCardPage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [eMail, setEMail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [drivingLicenseChecked, setDrivingLicenseChecked] = useState(false);
+  const [eyeSightChecked, setEyeSightChecked] = useState(false);
+  const [glassesContactsWorn, setGlassesContactsWorn] = useState(false);
+  const [theoryTestBooked, setTheoryTestBooked] = useState(false);
+  const [theoryTestPassed, setTheoryTestPassed] = useState(false);
+  const [practicalTestBooked, setPracticalTestBooked] = useState(false);
   const [noviceSkillsList, setNoviceSkills] = useState(defaultNoviceSkillsList);
   const [intermediateSkillsList, setIntermediateSkills] = useState(
     defaultIntermediateSkillsList
@@ -63,6 +70,13 @@ const ReportCardPage: React.FC = () => {
             setFirstName(pupil.firstName);
             setLastName(pupil.lastName);
             setEMail(pupil.eMail);
+            setNotes(pupil.notes);
+            setDrivingLicenseChecked(pupil.drivingLicenseChecked);
+            setEyeSightChecked(pupil.eyeSightChecked);
+            setGlassesContactsWorn(pupil.glassesContactsWorn);
+            setTheoryTestBooked(pupil.theoryTestBooked);
+            setTheoryTestPassed(pupil.theoryTestPassed);
+            setPracticalTestBooked(pupil.practicalTestBooked);
             setNoviceSkills(pupil.noviceSkillsList);
             setIntermediateSkills(pupil.intermediateSkillsList);
             setAdvancedSkills(pupil.advancedSkillsList);
@@ -86,6 +100,13 @@ const ReportCardPage: React.FC = () => {
       firstName,
       lastName,
       eMail,
+      notes,
+      drivingLicenseChecked,
+      eyeSightChecked,
+      glassesContactsWorn,
+      theoryTestBooked,
+      theoryTestPassed,
+      practicalTestBooked,
       noviceSkillsList,
       intermediateSkillsList,
       advancedSkillsList,
@@ -114,6 +135,13 @@ const ReportCardPage: React.FC = () => {
         firstName,
         lastName,
         eMail,
+        notes,
+        drivingLicenseChecked,
+        eyeSightChecked,
+        glassesContactsWorn,
+        theoryTestBooked,
+        theoryTestPassed,
+        practicalTestBooked,
         noviceSkillsList,
         intermediateSkillsList,
         advancedSkillsList,
@@ -164,6 +192,13 @@ const ReportCardPage: React.FC = () => {
         firstName,
         lastName,
         eMail,
+        notes,
+        drivingLicenseChecked,
+        eyeSightChecked,
+        glassesContactsWorn,
+        theoryTestBooked,
+        theoryTestPassed,
+        practicalTestBooked,
         noviceSkillsList,
         intermediateSkillsList,
         advancedSkillsList,
@@ -211,6 +246,12 @@ const ReportCardPage: React.FC = () => {
     }));
   };
 
+  const handleTextAreaChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setter(e.target.value);
+    };
+
   const handleInputChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -230,6 +271,20 @@ const ReportCardPage: React.FC = () => {
             firstName={firstName}
             lastName={lastName}
             eMail={eMail}
+            notes={notes}
+            drivingLicenseChecked={drivingLicenseChecked}
+            eyeSightChecked={eyeSightChecked}
+            glassesContactsWorn={glassesContactsWorn}
+            theoryTestBooked={theoryTestBooked}
+            theoryTestPassed={theoryTestPassed}
+            practicalTestBooked={practicalTestBooked}
+            onChangeNotes={handleTextAreaChange(setNotes)}
+            onChangeOne={() => setDrivingLicenseChecked(!drivingLicenseChecked)}
+            onChangeTwo={() => setEyeSightChecked(!eyeSightChecked)}
+            onChangeThree={() => setGlassesContactsWorn(!glassesContactsWorn)}
+            onChangeFour={() => setTheoryTestBooked(!theoryTestBooked)}
+            onChangeFive={() => setTheoryTestPassed(!theoryTestPassed)}
+            onChangeSix={() => setPracticalTestBooked(!practicalTestBooked)}
             onChangeFirstName={handleInputChange(setFirstName)}
             onChangeLastName={handleInputChange(setLastName)}
             onChangeEmail={handleInputChange(setEMail)}

@@ -2,6 +2,13 @@ export interface Pupil {
   firstName: string;
   lastName: string;
   eMail: string;
+  notes: string;
+  drivingLicenseChecked: boolean;
+  eyeSightChecked: boolean;
+  glassesContactsWorn: boolean;
+  theoryTestBooked: boolean;
+  theoryTestPassed: boolean;
+  practicalTestBooked: boolean;
   noviceSkillsList: DrivingSkill[];
   intermediateSkillsList: DrivingSkill[];
   advancedSkillsList: DrivingSkill[];
