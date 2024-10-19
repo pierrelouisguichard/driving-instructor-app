@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
         target:
           mode === "development"
             ? "http://localhost:4000" // Local development server
-            : "https://your-backend.onrender.com", // Render backend URL
+            : "https://driving-instructor-app.onrender.com/", // Render backend URL
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
