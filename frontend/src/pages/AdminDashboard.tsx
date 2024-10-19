@@ -4,6 +4,8 @@ import { useLogout } from "../hooks/useLogout";
 import { User } from "../interface/Interfaces";
 import { FaTrashCan } from "react-icons/fa6";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -21,7 +23,7 @@ const AdminDashboard: React.FC = () => {
     setLoading(true);
     setError(""); // Clear previous error messages
     try {
-      const response = await fetch("http://localhost:4000/api/user/allUsers");
+      const response = await fetch(`${API_URL}/api/user/allUsers`);
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -45,7 +47,7 @@ const AdminDashboard: React.FC = () => {
     if (!id) return { success: false };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/user/${id}`, {
+      const response = await fetch(`${API_URL}/api/user/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -67,9 +69,7 @@ const AdminDashboard: React.FC = () => {
     setLoading(true);
     setError(""); // Clear previous error messages
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/user/pendingInvites"
-      );
+      const response = await fetch(`${API_URL}/api/user/pendingInvites`);
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -96,16 +96,13 @@ const AdminDashboard: React.FC = () => {
     setError(""); // Clear previous error messages
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/user/invitation",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/user/invitation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
       if (response.ok) {
         // Successful response
