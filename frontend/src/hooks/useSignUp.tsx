@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useSignUp = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,7 +19,7 @@ export const useSignUp = () => {
     try {
       console.log({ email, password, invitationCode }); // Log data being sent
 
-      const response = await fetch("http://localhost:4000/api/user/signup", {
+      const response = await fetch(`${API_URL}/api/user/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, invitationCode }),
