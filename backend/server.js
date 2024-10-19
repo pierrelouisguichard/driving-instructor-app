@@ -7,26 +7,41 @@ const userRoutes = require("./routes/user");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 
+// Configure CORS to allow your frontend origin
+const corsOptions = {
+  origin: "https://driving-instructor-app-1.onrender.com", // Frontend URL on Render
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Allow cookies and credentials if needed
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// Apply CORS middleware globally
+app.use(cors(corsOptions));
+
+// Middleware to parse JSON and log requests
 app.use(express.json());
-app.use(cors());
-
 app.use((req, res, next) => {
-  console.log(req.path, req.method);
+  console.log(`${req.method} ${req.path}`);
   next();
 });
 
+// Routes
 app.use("/api/pupils", pupilRoutes);
 app.use("/api/user", userRoutes);
 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => {})
-  .catch((e) => {
-    console.log(e);
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
   });
 
+// Start the server
 app.listen(port, () => {
-  console.log("listening on port " + process.env.PORT);
+  console.log(`Server is listening on port ${port}`);
 });
