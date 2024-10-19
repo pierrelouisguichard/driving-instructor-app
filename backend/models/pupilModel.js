@@ -22,7 +22,7 @@ const pupilSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     eMail: { type: String, required: true },
-    notes: { type: String, required: true },
+    notes: { type: String, required: false },
     drivingLicenseChecked: { type: Boolean, required: true },
     eyeSightChecked: { type: Boolean, required: true },
     glassesContactsWorn: { type: Boolean, required: true },
