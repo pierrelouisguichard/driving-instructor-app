@@ -17,6 +17,8 @@ export const useSignUp = () => {
     setError(null);
 
     try {
+      console.log({ email, password, invitationCode }); // Log data being sent
+
       const response = await fetch(`${API_URL}/api/user/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

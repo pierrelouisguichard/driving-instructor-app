@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const pupilRoutes = require("./routes/pupils");
 const userRoutes = require("./routes/user");
 const cors = require("cors");
-const path = require("path"); // Import path module
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -31,14 +30,6 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/pupils", pupilRoutes);
 app.use("/api/user", userRoutes);
-
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "dist"))); // Serve static files from the 'dist' folder
-
-// Catch-all route for serving the React app for all other requests
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html")); // Adjust the path to your build directory
-});
 
 // Connect to MongoDB
 mongoose
