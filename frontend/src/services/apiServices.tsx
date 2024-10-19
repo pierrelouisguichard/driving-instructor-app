@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
 import { Pupil, PupilWithID, User } from "../interface/Interfaces";
 
-const PUPILS_API_URL = "http://localhost:4000/api/pupils/";
+const API_URL = import.meta.env.VITE_API_URL;
+
+const PUPILS_API_URL = `${API_URL}/api/pupils/`;
 
 /*
  * Handles interactions with external APIs, centralising API logic.
