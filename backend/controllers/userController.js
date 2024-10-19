@@ -112,7 +112,7 @@ const sendInvitation = async (req, res) => {
 
     console.log("Trying to send email to " + email);
 
-    const registrationLink = `http://localhost:3000/signup?invitationCode=${invitationCode}`;
+    const registrationLink = `https://driving-instructor-app-1.onrender.com/signup?invitationCode=${invitationCode}`;
 
     const subject = "Welcome! Complete Your Registration";
     const html = `
