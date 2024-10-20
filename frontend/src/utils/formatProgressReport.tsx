@@ -97,10 +97,13 @@ const formatProgressReport = ({
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
+            gap: 20px; /* Adds consistent space between the logos */
           }
           .logo {
             width: 150px;
-            margin: 0 10px;
+            height: 100px; /* Ensures both logos are the same size */
+            object-fit: contain; /* Prevents distortion */
+            margin: 0;
           }
           h1 {
             color: #213260;
@@ -141,10 +144,17 @@ const formatProgressReport = ({
       <body>
         <div class="container">
           <div class="logo-container">
-            <img class="logo" src="https://chelseadrivingschool.co.uk/wp-content/uploads/2019/04/chelsea-driving-school-240.jpg" alt="Chelsea Driving School Logo" />
-            <img class="logo" src="https://claphamdrivingschool.co.uk/wp-content/uploads/2017/09/clapham-driving-school-logo-263x160.png" />
+            <img
+              class="logo"
+              src="https://chelseadrivingschool.co.uk/wp-content/uploads/2019/04/chelsea-driving-school-240.jpg"
+              alt="Chelsea Driving School Logo"
+            />
+            <img
+              class="logo"
+              src="https://claphamdrivingschool.co.uk/wp-content/uploads/2017/09/clapham-driving-school-logo-263x160.png"
+              alt="Clapham Driving School Logo"
+            />
           </div>
-
           <div class="info-section">
             <h1>General Information</h1>
             <ul class="info-list">
