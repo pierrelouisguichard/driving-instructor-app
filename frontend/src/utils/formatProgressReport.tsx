@@ -70,7 +70,6 @@ const formatProgressReport = ({
   intermediateSkillsList,
   advancedSkillsList,
 }: Pupil): string => {
-  // Helper function to render boolean values as Yes/No
   const renderBoolean = (value: boolean) => (value ? "✅" : "❌");
 
   return `
@@ -93,10 +92,15 @@ const formatProgressReport = ({
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
           }
+          .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+          }
           .logo {
-            display: block;
-            margin: 0 auto 20px;
             width: 150px;
+            margin: 0 10px;
           }
           h1 {
             color: #213260;
@@ -121,9 +125,6 @@ const formatProgressReport = ({
           .info-section {
             margin-bottom: 20px;
           }
-          .info-section h2 {
-            margin-top: 0;
-          }
           .info-list {
             list-style: none;
             padding: 0;
@@ -139,11 +140,13 @@ const formatProgressReport = ({
       </head>
       <body>
         <div class="container">
-          <img class="logo" src="https://chelseadrivingschool.co.uk/wp-content/uploads/2019/04/chelsea-driving-school-240.jpg" alt="Driving School Logo" />
-          <h1>Progress Report</h1>
+          <div class="logo-container">
+            <img class="logo" src="https://chelseadrivingschool.co.uk/wp-content/uploads/2019/04/chelsea-driving-school-240.jpg" alt="Chelsea Driving School Logo" />
+            <img class="logo" src="https://claphamdrivingschool.co.uk/wp-content/uploads/2017/09/clapham-driving-school-logo-263x160.png" />
+          </div>
 
           <div class="info-section">
-            <h2>General Information</h2>
+            <h1>General Information</h1>
             <ul class="info-list">
               <li><strong>Notes:</strong> ${notes || "None"}</li>
               <li><strong>Driving License Checked:</strong> ${renderBoolean(
@@ -168,24 +171,18 @@ const formatProgressReport = ({
           </div>
 
           <div class="skill-category">
-            <div>
-              <h2>Novice Skills</h2>
-              <table cellpadding="0" cellspacing="0" border="0">
-                ${generateSkillListHtml(noviceSkillsList)}
-              </table>
-            </div>
-            <div>
-              <h2>Intermediate Skills</h2>
-              <table cellpadding="0" cellspacing="0" border="0">
-                ${generateSkillListHtml(intermediateSkillsList)}
-              </table>
-            </div>
-            <div>
-              <h2>Advanced Skills</h2>
-              <table cellpadding="0" cellspacing="0" border="0">
-                ${generateSkillListHtml(advancedSkillsList)}
-              </table>
-            </div>
+            <h1>Novice Skills</h1>
+            <table>
+              ${generateSkillListHtml(noviceSkillsList)}
+            </table>
+            <h1>Intermediate Skills</h1>
+            <table>
+              ${generateSkillListHtml(intermediateSkillsList)}
+            </table>
+            <h1>Advanced Skills</h1>
+            <table>
+              ${generateSkillListHtml(advancedSkillsList)}
+            </table>
           </div>
         </div>
       </body>
