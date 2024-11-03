@@ -1,6 +1,7 @@
 import { Pupil } from "../interface/Interfaces";
 
 const stages = [
+  "Not Introduced",
   "Introduced",
   "Talk Through",
   "Prompted",
@@ -18,6 +19,8 @@ const getProgressPercentage = (stage: string) => {
 // Helper function to get color based on the stage
 const getProgressColor = (stage: string) => {
   switch (stage) {
+    case "Not Introduced":
+      return "#d9534f"; // Color for "Not Introduced"
     case "Introduced":
       return "#3d3d3d";
     case "Talk Through":
