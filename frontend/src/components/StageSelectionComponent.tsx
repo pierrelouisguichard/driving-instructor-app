@@ -54,6 +54,8 @@ const getStageColor = (stage: string): string => {
       return "#6474a5";
     case "Independent":
       return "#95a5d0";
+    case "Not Introduced":
+      return "#a45a58"; // You can set any color code you'd like for this stage
     default:
       return "#D3D3D3";
   }

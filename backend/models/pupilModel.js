@@ -7,6 +7,7 @@ const skillsSchema = new Schema({
   stage: {
     type: String,
     enum: [
+      "Not Introduced",
       "Introduced",
       "Talk Through",
       "Prompted",

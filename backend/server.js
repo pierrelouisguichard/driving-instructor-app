@@ -12,6 +12,7 @@ const port = process.env.PORT || 4000;
 // Configure CORS to allow your frontend origin
 const corsOptions = {
   origin: "https://driving-instructor-app-1.onrender.com", // Frontend URL on Render
+  // origin: "http://localhost:3000",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Allow cookies and credentials if needed
   allowedHeaders: ["Content-Type", "Authorization"],
